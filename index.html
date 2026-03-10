@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Lab | Каталог медицинских услуг</title>
+    <!-- Подключаем Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключаем иконки -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключаем премиальный шрифт Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        neo: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                            dark: '#171717'
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fafafa; scroll-behavior: smooth; }
+        * { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+
+        .service-card { transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; will-change: transform, box-shadow; }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.05), 0 10px 10px -5px rgba(239, 68, 68, 0.02); }
+        
+        .category-link.active { font-weight: 600; color: #dc2626; background-color: #fef2f2; border-left: 3px solid #ef4444; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #fee2e2; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+        input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .header-glass {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom-color: rgba(241, 245, 249, 0.5) !important;
+        }
+
+        .reveal-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; will-change: opacity, transform; }
+        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="text-neo-dark relative">
+
+    <!-- Верхняя тонкая панель -->
+    <div class="bg-white text-slate-500 text-[11px] md:text-xs py-2 hidden lg:block border-b border-slate-200 transition-colors duration-500 relative z-50" id="topBar">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl flex justify-between items-center">
+            <div class="flex gap-6 items-center">
+                <!-- Dropdown г. Астана -->
+                <div class="relative group cursor-pointer py-2">
+                    <span class="hover:text-neo-600 transition flex items-center gap-1 font-bold text-neo-dark">
+                        <i class="fa-solid fa-location-dot text-neo-500 text-sm"></i> г. Астана <i class="fa-solid fa-chevron-down text-[9px] ml-0.5 opacity-70"></i>
+                    </span>
+                    <!-- Выпадающее меню 2GIS -->
+                    <div class="absolute top-full left-0 mt-0 w-72 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                        <div class="mb-4">
+                            <div class="font-bold text-neo-dark mb-1 text-sm">Филиал Толе би, 61</div>
+                            <div class="text-[10px] text-slate-500 mb-2">пн-пт с 8:00 до 16:00, суббота с 8:00 до 13:00</div>
+                            <a href="https://2gis.kz/astana/geo/70000001100630037" target="_blank" class="text-neo-500 hover:text-neo-600 flex items-center gap-1.5 text-xs font-bold bg-neo-50 p-2.5 rounded-xl transition hover:bg-neo-100"><i class="fa-solid fa-route"></i> Построить маршрут в 2GIS</a>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="font-bold text-neo-dark mb-1 text-sm">Филиал Аль-Фараби, 29</div>
+                            <div class="text-[10px] text-slate-500 mb-2">пн-пт с 8:00 до 17:00, сб с 8:00 до 13:00</div>
+                            <a href="https://2gis.kz/astana/geo/70000001081319397" target="_blank" class="text-neo-500 hover:text-neo-600 flex items-center gap-1.5 text-xs font-bold bg-neo-50 p-2.5 rounded-xl transition hover:bg-neo-100"><i class="fa-solid fa-route"></i> Построить маршрут в 2GIS</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" onclick="openLegalModal('about')" class="hover:text-neo-600 transition font-medium cursor-pointer">О клинике</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('patients')" class="hover:text-neo-600 transition font-medium cursor-pointer">Пациентам</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('doctors')" class="hover:text-neo-600 transition font-medium cursor-pointer">Врачам</a>
+            </div>
+            <div class="flex gap-5 items-center">
+                <div class="text-right text-[10px] leading-relaxed text-slate-500 border-r border-slate-200 pr-5">
+                    <div><span class="font-bold text-slate-700">Толе би, 61:</span> пн-пт с 8:00 до 16:00, суббота с 8:00 до 13:00, воскресенье выходной</div>
+                    <div><span class="font-bold text-slate-700">Аль-Фараби, 29:</span> пн-пт с 8:00 до 17:00, сб с 8:00 до 13:00, воскресенье выходной</div>
+                </div>
+                <button onclick="openBranchModal()" class="hover:text-neo-600 font-bold cursor-pointer text-neo-500 flex items-center gap-1.5"><i class="fa-brands fa-whatsapp text-green-500 text-lg"></i> Быстрая связь</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Главный Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40 border-b border-slate-100 py-4 md:py-6 transition-all duration-300" id="mainHeader">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl flex justify-between items-center">
+            <!-- Логотип -->
+            <div class="flex items-center gap-4 md:gap-7">
+                <video autoplay loop muted playsinline class="w-24 h-24 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full shadow-xl border-[4px] border-white outline outline-2 outline-neo-100 object-cover shrink-0">
+                    <source src="2026-03-06 20.06.24.mov" type="video/quicktime">
+                    <source src="2026-03-06 20.06.24.mov" type="video/mp4">
+                </video>
+                <div>
+                    <div class="font-extrabold text-5xl md:text-6xl lg:text-7xl tracking-tight text-neo-dark leading-none">NeoLab</div>
+                    <div class="text-xs md:text-sm lg:text-base text-neo-600 font-extrabold uppercase tracking-widest mt-1.5 md:mt-2">LABORATORY MIRUYERT BEKTENOVA</div>
+                </div>
+            </div>
+
+            <!-- Поиск -->
+            <div class="hidden lg:flex flex-1 max-w-md mx-8 relative">
+                <input type="text" id="searchInput" oninput="filterServices()" placeholder="Поиск услуг, анализов, препаратов..." class="w-full bg-white border-2 border-neo-500 rounded-full py-3 pl-5 pr-10 text-sm focus:ring-4 focus:ring-neo-100 outline-none transition text-neo-dark placeholder-slate-400 font-medium shadow-sm">
+                <i class="fa-solid fa-search absolute right-4 top-3.5 text-slate-400 text-lg"></i>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="hidden md:block text-right">
+                    <button onclick="openBranchModal()" class="text-sm font-medium text-neo-500 border-b border-neo-500/30 hover:border-neo-600 transition">Заказать звонок</button>
+                </div>
+                <button onclick="openBranchModal()" class="bg-neo-500 hover:bg-neo-600 text-white px-6 md:px-8 py-3 rounded-full text-sm font-bold transition-all duration-300 shadow-[0_4px_14px_0_rgba(239,68,68,0.39)] hover:shadow-[0_6px_20px_rgba(239,68,68,0.23)] hover:-translate-y-0.5 active:scale-95">
+                    Записаться
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Плавающая кнопка (FAB) -->
+    <div class="fixed bottom-6 right-6 z-40">
+        <button onclick="openBranchModal()" class="bg-slate-800 text-white rounded-full p-4 shadow-2xl hover:bg-neo-dark hover:scale-105 transition-transform flex items-center gap-3 animate-bounce-slow border-4 border-white group">
+            <div class="bg-white/10 rounded-full p-2 group-hover:bg-emerald-500 transition-colors">
+                <i class="fa-solid fa-headset text-xl text-emerald-400 group-hover:text-white transition-colors"></i>
+            </div>
+            <span class="font-bold hidden md:inline pr-3">Помощь и консультация</span>
+        </button>
+    </div>
+
+    <!-- ПЛАВАЮЩИЙ ВИДЖЕТ ПЛАНА ВИЗИТА -->
+    <div id="planWidget" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-white text-neo-dark border-2 border-neo-500 px-2 py-2 md:px-3 md:py-2 rounded-full shadow-2xl flex items-center gap-4 z-50 transition-all duration-500 translate-y-32 opacity-0 w-[90%] md:w-auto max-w-md cursor-pointer hover:bg-neo-50" onclick="openPlanModal()">
+        <div class="bg-neo-500 text-white w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-clipboard-list text-lg"></i>
+        </div>
+        <div class="flex-1 leading-tight whitespace-nowrap">
+            <div class="text-[10px] md:text-xs text-slate-500 font-bold uppercase tracking-wider">Ваш план визита</div>
+            <div class="font-extrabold text-sm md:text-base"><span id="planCount">0</span> услуг на <span id="planTotal">0</span> ₸</div>
+        </div>
+        <button onclick="openPlanModal(); event.stopPropagation();" class="bg-neo-500 hover:bg-neo-600 text-white px-5 md:px-6 py-2.5 rounded-full text-sm font-bold shadow-md transition shrink-0 whitespace-nowrap">
+            Посмотреть
+        </button>
+    </div>
+
+    <!-- ОБЕРТКА ДЛЯ ПРОМО-БЛОКОВ (Скрывается при поиске) -->
+    <div id="promoBlocks">
+        
+        <!-- БЛОК СПЕЦИАЛИЗИРОВАННЫХ УСЛУГ (ФЛАГМАНЫ) -->
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl mt-10 mb-8 reveal-on-scroll">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <h2 class="text-3xl font-bold text-neo-dark mb-2">Экспертная диагностика</h2>
+                    <p class="text-slate-500 text-sm">Флагманские лабораторные исследования, на которых мы специализируемся</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Parasep -->
+                <div class="bg-neo-800 rounded-3xl p-6 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openServiceInfoModal('Parasep (кал)', 'Абсолютный золотой стандарт современной лабораторной диагностики паразитарных инфекций. Это самый точный на сегодняшний день метод выявления яиц гельминтов и простейших без ложных результатов.')">
+                    <div class="absolute -right-12 -top-12 w-32 h-32 bg-neo-500 rounded-full blur-3xl opacity-40 group-hover/card:opacity-60 group-hover/card:scale-110 transition-all duration-700"></div>
+                    <div class="z-10 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-white text-neo-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Паразитология</span>
+                            <i class="fa-solid fa-microscope text-neo-100 text-xl opacity-50 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1 group-hover/card:text-neo-100 transition-colors">Parasep (кал)</h3>
+                        <div class="text-neo-100 font-medium mb-4 text-xs border-b border-white/10 pb-4">Золотой стандарт диагностики</div>
+                        <p class="text-white/80 text-sm leading-relaxed mb-6">Самый точный на сегодняшний день метод выявления паразитов, яиц гельминтов и простейших без ложных результатов.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-between mt-auto pt-2 border-t border-white/10 gap-3">
+                        <div class="text-2xl font-bold text-white whitespace-nowrap">7 500 ₸</div>
+                        <button onclick="togglePlanItem('parasep', 'service', event)" id="btn_parasep" class="group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                            <i class="fa-solid fa-plus mr-1"></i> В расчет
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ХМС по Осипову -->
+                <div class="bg-neo-900 rounded-3xl p-6 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openServiceInfoModal('ХМС по Осипову', 'ХМС по Осипову это лабораторный анализ, который проводится методом хромато-масс-спектрометрии и позволяет определить метаболиты бактерий, грибов и микроорганизмов в организме. Исследование помогает оценить состояние микробиоты кишечника, выявить скрытые инфекции, дисбиоз, грибковую нагрузку и воспалительные процессы')">
+                    <div class="absolute -right-12 -top-12 w-32 h-32 bg-neo-600 rounded-full blur-3xl opacity-40 group-hover/card:opacity-60 group-hover/card:scale-110 transition-all duration-700"></div>
+                    <div class="z-10 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-white text-neo-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Микробиом</span>
+                            <i class="fa-solid fa-dna text-neo-100 text-xl opacity-50 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1 group-hover/card:text-neo-100 transition-colors">ХМС по Осипову</h3>
+                        <div class="text-neo-100 font-medium mb-4 text-xs border-b border-white/10 pb-4">Оценка состояния микробиоты</div>
+                        <p class="text-white/80 text-sm leading-relaxed mb-6">Определяет метаболиты бактерий и грибов. Помогает выявить скрытые инфекции, дисбиоз и воспалительные процессы.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-between mt-auto pt-2 border-t border-white/10 gap-3">
+                        <div class="text-2xl font-bold text-white whitespace-nowrap">35 000 ₸</div>
+                        <button onclick="togglePlanItem('hms', 'service', event)" id="btn_hms" class="group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                            <i class="fa-solid fa-plus mr-1"></i> В расчет
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Пищевые непереносимости -->
+                <div class="bg-neo-800 rounded-3xl p-6 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openServiceInfoModal('Пищевые непереносимости', 'Полный и максимально глубокий скрининг (IgG) на скрытую пищевую непереносимость к огромной базе продуктов питания. Успешно помогает найти неочевидную причину хронических воспалений, не проходящего акне, вздутий и постоянной усталости.')">
+                    <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-neo-500 rounded-full blur-3xl opacity-40 group-hover/card:opacity-60 group-hover/card:scale-110 transition-all duration-700"></div>
+                    <div class="z-10 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-white text-neo-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Иммунология</span>
+                            <i class="fa-solid fa-shield-halved text-neo-100 text-xl opacity-50 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1 group-hover/card:text-neo-100 transition-colors">Пищевая непереносимость</h3>
+                        <div class="text-neo-100 font-medium mb-4 text-xs border-b border-white/10 pb-4">Скрининг скрытых воспалений (IgG)</div>
+                        <p class="text-white/80 text-sm leading-relaxed mb-6">Глубокий анализ для выявления продуктов, разрушающих организм годами. Помогает устранить причину акне и усталости.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-between mt-auto pt-2 border-t border-white/10 gap-3">
+                        <div class="text-2xl font-bold text-white whitespace-nowrap">160 000 ₸</div>
+                        <button onclick="togglePlanItem('food_intol', 'service', event)" id="btn_food_intol" class="group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                            <i class="fa-solid fa-plus mr-1"></i> В расчет
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Микроэлементы для волос -->
+                <div class="bg-neo-900 rounded-3xl p-6 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 cursor-pointer" onclick="openServiceInfoModal('Микроэлементы для волос', 'Специфическое исследование, выявляющее скрытые дефициты витаминов и избыток тяжелых металлов по химическому составу волоса. Помогает найти истинную, глубинную причину алопеции и потери густоты.')">
+                    <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-neo-600 rounded-full blur-3xl opacity-40 group-hover/card:opacity-60 group-hover/card:scale-110 transition-all duration-700"></div>
+                    <div class="z-10 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-white text-neo-900 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Трихология</span>
+                            <i class="fa-solid fa-vial text-neo-100 text-xl opacity-50 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-1 group-hover/card:text-neo-100 transition-colors">Скрининг по волосам</h3>
+                        <div class="text-neo-100 font-medium mb-4 text-xs border-b border-white/10 pb-4">Поиск причин выпадения волос</div>
+                        <p class="text-white/80 text-sm leading-relaxed mb-6">Выявляет скрытые дефициты витаминов и избыток тяжелых металлов. Точно определяет истинную причину потери густоты.</p>
+                    </div>
+                    <div class="z-10 flex items-center justify-between mt-auto pt-2 border-t border-white/10 gap-3">
+                        <div class="text-2xl font-bold text-white whitespace-nowrap">53 000 ₸</div>
+                        <button onclick="togglePlanItem('hair_micro', 'service', event)" id="btn_hair_micro" class="group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                            <i class="fa-solid fa-plus mr-1"></i> В расчет
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК ПРОДАЖИ ПАКЕТОВ (С ПРЕМИАЛЬНЫМИ ФОНАМИ) -->
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl mb-16 reveal-on-scroll">
+            <div class="flex items-end justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-neo-dark mb-2">Комплексные программы</h2>
+                    <p class="text-slate-500 text-sm">Готовые решения: анализы + терапия с выгодой до 30 000 ₸</p>
+                </div>
+                <div class="hidden md:block"><i class="fa-solid fa-arrow-down text-neo-500 text-2xl animate-bounce"></i></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Пакет 1: STOP Выпадение (Фон: волосы/шелк) -->
+                <div class="rounded-3xl p-8 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 bg-slate-900 border border-slate-700">
+                    <!-- Фоновое изображение -->
+                    <div class="absolute inset-0 z-0 opacity-40 group-hover/card:opacity-50 group-hover/card:scale-105 transition-all duration-700 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1631214498322-861ed7a66b96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); mix-blend-mode: luminosity;"></div>
+                    <!-- Затемняющий градиент -->
+                    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+                    
+                    <div class="z-10 flex-1 cursor-pointer" onclick="openPackageModal('stop-hair')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-neo-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Хит для женщин</span>
+                            <i class="fa-solid fa-hand-holding-droplet text-neo-100 text-xl opacity-70 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-1 group-hover/card:text-neo-100 transition-colors">STOP Выпадение</h3>
+                        <div class="text-slate-300 font-medium mb-4 text-xs border-b border-white/20 pb-4">Восстановление после родов и стресса</div>
+                        <ul class="text-white/90 text-sm space-y-3 mb-8">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-neo-500 mt-0.5"></i> <span><b>Анализ:</b> Микроэлементы для волос</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-neo-500 mt-0.5"></i> <span><b>Капельница:</b> NEO BEAUTY</span></li>
+                            <li class="flex items-start gap-2 text-slate-300"><i class="fa-solid fa-gift text-neo-500 mt-0.5"></i> <span><b>Бонус:</b> Инъекция Витамина Д</span></li>
+                        </ul>
+                    </div>
+                    <div class="z-10 flex flex-col mt-auto">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-slate-400 line-through text-sm">95 000 ₸</span>
+                            <span class="bg-neo-500 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">Выгода 16 000 ₸</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="text-3xl font-bold text-white whitespace-nowrap">79 000 ₸</div>
+                            <button onclick="togglePlanItem('stop-hair', 'package', event)" id="btn_stop-hair" class="group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                                <i class="fa-solid fa-plus mr-1"></i> В расчет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Пакет 2: Энерджайзер (Фон: темный космос/энергия) -->
+                <div class="rounded-3xl p-8 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 bg-slate-900 border border-slate-700">
+                    <!-- Фоновое изображение -->
+                    <div class="absolute inset-0 z-0 opacity-40 group-hover/card:opacity-50 group-hover/card:scale-105 transition-all duration-700 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); mix-blend-mode: luminosity;"></div>
+                    <!-- Затемняющий градиент -->
+                    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+
+                    <div class="z-10 flex-1 cursor-pointer" onclick="openPackageModal('energy')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">Бизнес / Мужчины</span>
+                            <i class="fa-solid fa-bolt text-blue-200 text-xl opacity-70 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-1 group-hover/card:text-blue-200 transition-colors">ЭНЕРДЖАЙЗЕР</h3>
+                        <div class="text-slate-300 font-medium mb-4 text-xs border-b border-white/20 pb-4">При хронической усталости и апатии</div>
+                        <ul class="text-white/90 text-sm space-y-3 mb-8">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-blue-500 mt-0.5"></i> <span><b>Курс IV-терапии:</b> 3 капельницы NEO ENERGY</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-blue-500 mt-0.5"></i> <span><b>Поддержка:</b> 3 инъекции (В12 или Гептрал)</span></li>
+                        </ul>
+                    </div>
+                    <div class="z-10 flex flex-col mt-auto">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-slate-400 line-through text-sm">159 000 ₸</span>
+                            <span class="bg-blue-600 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">Выгода 29 000 ₸</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="text-3xl font-bold text-white whitespace-nowrap">130 000 ₸</div>
+                            <button onclick="togglePlanItem('energy', 'package', event)" id="btn_energy" class="group/btn shrink-0 bg-white/20 hover:bg-blue-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                                <i class="fa-solid fa-plus mr-1"></i> В расчет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Пакет 3: TOTAL DETOX (Фон: природа/лист/текстура воды) -->
+                <div class="rounded-3xl p-8 shadow-lg relative overflow-hidden flex flex-col group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 bg-slate-900 border border-slate-700">
+                    <!-- Фоновое изображение -->
+                    <div class="absolute inset-0 z-0 opacity-40 group-hover/card:opacity-50 group-hover/card:scale-105 transition-all duration-700 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); mix-blend-mode: luminosity;"></div>
+                    <!-- Затемняющий градиент -->
+                    <div class="absolute inset-0 z-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
+
+                    <div class="z-10 flex-1 cursor-pointer" onclick="openPackageModal('detox')">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">VIP / Биохакинг</span>
+                            <i class="fa-solid fa-leaf text-emerald-200 text-xl opacity-70 group-hover/card:scale-110 transition-transform"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-1 group-hover/card:text-emerald-200 transition-colors">TOTAL DETOX</h3>
+                        <div class="text-slate-300 font-medium mb-4 text-xs border-b border-white/20 pb-4">Проблемы с кожей, аллергии, вес</div>
+                        <ul class="text-white/90 text-sm space-y-3 mb-8">
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <span><b>Диагностика:</b> Тест на пищевую непереносимость</span></li>
+                            <li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <span><b>Микробиом:</b> Анализ ХМС по Осипову</span></li>
+                            <li class="flex items-start gap-2 text-slate-300"><i class="fa-solid fa-check text-emerald-500 mt-0.5"></i> <span><b>Терапия:</b> Капельница NEO DETOX</span></li>
+                        </ul>
+                    </div>
+                    <div class="z-10 flex flex-col mt-auto">
+                        <div class="flex items-center gap-3 mb-1">
+                            <span class="text-slate-400 line-through text-sm">215 000 ₸</span>
+                            <span class="bg-emerald-600 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">Выгода 30 000 ₸</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="text-3xl font-bold text-white whitespace-nowrap">185 000 ₸</div>
+                            <button onclick="togglePlanItem('detox', 'package', event)" id="btn_detox" class="group/btn shrink-0 bg-white/20 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95">
+                                <i class="fa-solid fa-plus mr-1"></i> В расчет
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Главный контент: Каталог -->
+    <main id="catalogSection" class="container mx-auto px-4 lg:px-8 max-w-7xl pb-20">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Левый сайдбар (Рубрикатор) -->
+            <aside class="w-full md:w-72 shrink-0">
+                <h1 class="text-2xl font-bold text-neo-dark mb-6">Каталог услуг</h1>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-28">
+                    <ul id="categoryList" class="flex flex-col text-sm max-h-[70vh] overflow-y-auto"></ul>
+                </div>
+            </aside>
+
+            <!-- Правая часть (Список услуг) -->
+            <div class="flex-1">
+                <!-- Мобильный поиск -->
+                <div class="lg:hidden mb-6 relative">
+                    <input type="text" id="searchInputMobile" oninput="filterServices(true)" placeholder="Поиск услуг, анализов..." class="w-full bg-white border-2 border-neo-500 rounded-xl py-3 pl-4 pr-10 text-sm focus:ring-4 focus:ring-neo-100 outline-none transition text-neo-dark placeholder-slate-400 font-medium shadow-sm">
+                    <i class="fa-solid fa-search absolute right-4 top-3.5 text-slate-400 text-lg"></i>
+                </div>
+
+                <!-- Заголовок текущей категории -->
+                <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
+                    <h2 id="currentCategoryTitle" class="text-2xl font-bold text-neo-dark transition-opacity duration-300">Все услуги</h2>
+                    <span id="servicesCount" class="text-xs text-neo-600 font-bold bg-neo-50 border border-neo-100 px-3 py-1.5 rounded-full shadow-sm">Найдено: 0</span>
+                </div>
+
+                <!-- Сетка карточек -->
+                <div id="servicesGrid" class="flex flex-col gap-3"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-neo-dark text-slate-300 py-12 border-t-4 border-neo-500">
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="font-bold text-2xl tracking-tight text-white leading-none mb-2">NeoLab</div>
+                <div class="text-[10px] text-neo-500 font-semibold uppercase tracking-widest mb-4">LABORATORY MIRUYERT BEKTENOVA</div>
+                <p class="text-sm text-slate-400 mb-4">Премиальный центр IV-терапии и лабораторной диагностики. Возвращаем ресурс по-медицински.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Наши филиалы (г. Астана)</h4>
+                <ul class="text-sm space-y-3 text-slate-400">
+                    <li>
+                        <div class="font-medium text-white mb-1">Филиал Толе би, 61</div>
+                        <div class="text-xs mb-1">пн-пт с 8:00 до 16:00, суббота с 8:00 до 13:00<br>воскресенье выходной</div>
+                        <a href="tel:+77774000804" class="text-neo-500 hover:text-white transition font-bold">+7 777 400 0804</a>
+                    </li>
+                    <li class="pt-2 border-t border-white/10">
+                        <div class="font-medium text-white mb-1">Филиал Аль-Фараби, 29</div>
+                        <div class="text-xs mb-1">пн-пт с 8:00 до 17:00, сб с 8:00 до 13:00<br>воскресенье выходной</div>
+                        <a href="tel:+77009257292" class="text-neo-500 hover:text-white transition font-bold">+7 700 925 7292</a>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Быстрая связь</h4>
+                <button onclick="openBranchModal()" class="bg-neo-500 hover:bg-neo-600 text-white px-5 py-3 rounded-xl text-sm font-bold transition-all w-full shadow-lg mb-2 hover:-translate-y-0.5 active:scale-95">
+                    Связаться с клиникой
+                </button>
+                <div class="text-[10px] text-slate-500 text-center">Нажимая кнопку, вы принимаете условия обработки данных</div>
+            </div>
+        </div>
+        <!-- ДОБАВЛЕН ОТСТУП СНИЗУ (pb-32), чтобы виджеты не перекрывали ссылки -->
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl mt-10 pt-6 pb-32 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <div>© 2026 NeoLab. Имеются противопоказания. Необходима консультация специалиста.</div>
+            <div class="flex flex-wrap gap-x-4 gap-y-2 justify-center md:justify-end">
+                <a href="javascript:void(0)" onclick="openLegalModal('privacy')" class="hover:text-white transition underline decoration-slate-600 underline-offset-2 cursor-pointer">Политика конфиденциальности</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('consent')" class="hover:text-white transition underline decoration-slate-600 underline-offset-2 cursor-pointer">Согласие на обработку данных</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('offer')" class="hover:text-white transition underline decoration-slate-600 underline-offset-2 cursor-pointer">Публичная оферта</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('agreement')" class="hover:text-white transition underline decoration-slate-600 underline-offset-2 cursor-pointer">Пользовательское соглашение</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== ВСЕ МОДАЛЬНЫЕ ОКНА ==================== -->
+
+    <!-- Модальное окно ВЫБОРА ФИЛИАЛА -->
+    <div id="branchModal" class="fixed inset-0 bg-neo-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="branchModalContent">
+            <div class="p-6 border-b border-neo-100 flex justify-between items-center bg-neo-50">
+                <h3 class="text-xl font-bold text-neo-dark"><i class="fa-regular fa-calendar-check text-neo-500 mr-2"></i> Быстрая связь</h3>
+                <button onclick="closeBranchModal()" class="text-slate-400 hover:text-neo-500 transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="border border-slate-200 rounded-2xl p-5 hover:border-neo-500 hover:shadow-md transition group">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-lg text-neo-dark group-hover:text-neo-600 transition">Филиал Толе би, 61</h4>
+                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-bold uppercase tracking-wider">Астана</span>
+                    </div>
+                    <div class="text-xs text-slate-500 mb-3 space-y-1.5 font-medium">
+                        <p><i class="fa-regular fa-clock w-4 text-neo-500"></i> пн-пт с 8:00 до 16:00, суббота с 8:00 до 13:00</p>
+                        <p><i class="fa-regular fa-calendar-xmark w-4 text-neo-500"></i> воскресенье выходной</p>
+                    </div>
+                    <a href="https://2gis.kz/astana/geo/70000001100630037" target="_blank" class="inline-block text-sm text-neo-500 hover:text-neo-600 font-bold mb-4 bg-neo-50 px-3 py-1.5 rounded-lg border border-neo-100 transition"><i class="fa-solid fa-map-location-dot mr-1"></i> Открыть в 2GIS</a>
+                    <div class="flex gap-3">
+                        <a href="https://wa.me/77774000804" target="_blank" class="flex-1 bg-green-500 text-white text-center py-2.5 rounded-xl text-sm font-bold hover:bg-green-600 transition shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-lg"></i> WhatsApp</a>
+                        <a href="tel:+77774000804" class="flex-1 bg-slate-100 text-slate-700 text-center py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition shadow-sm"><i class="fa-solid fa-phone mr-1"></i> Позвонить</a>
+                    </div>
+                </div>
+                <div class="border border-slate-200 rounded-2xl p-5 hover:border-neo-500 hover:shadow-md transition group">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-bold text-lg text-neo-dark group-hover:text-neo-600 transition">Филиал Аль-Фараби, 29</h4>
+                        <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-1 rounded font-bold uppercase tracking-wider">Астана</span>
+                    </div>
+                    <div class="text-xs text-slate-500 mb-3 space-y-1.5 font-medium">
+                        <p><i class="fa-regular fa-clock w-4 text-neo-500"></i> пн-пт с 8:00 до 17:00, сб с 8:00 до 13:00</p>
+                        <p><i class="fa-regular fa-calendar-xmark w-4 text-neo-500"></i> воскресенье выходной</p>
+                    </div>
+                    <a href="https://2gis.kz/astana/geo/70000001081319397" target="_blank" class="inline-block text-sm text-neo-500 hover:text-neo-600 font-bold mb-4 bg-neo-50 px-3 py-1.5 rounded-lg border border-neo-100 transition"><i class="fa-solid fa-map-location-dot mr-1"></i> Открыть в 2GIS</a>
+                    <div class="flex gap-3">
+                        <a href="https://wa.me/77009257292" target="_blank" class="flex-1 bg-green-500 text-white text-center py-2.5 rounded-xl text-sm font-bold hover:bg-green-600 transition shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-lg"></i> WhatsApp</a>
+                        <a href="tel:+77009257292" class="flex-1 bg-slate-100 text-slate-700 text-center py-2.5 rounded-xl text-sm font-bold hover:bg-slate-200 transition shadow-sm"><i class="fa-solid fa-phone mr-1"></i> Позвонить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно ОПИСАНИЯ ПАКЕТА -->
+    <div id="packageModal" class="fixed inset-0 bg-neo-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="packageModalContent">
+            <div class="p-6 md:p-8 bg-neo-900 text-white relative shrink-0">
+                <button onclick="closePackageModal()" class="absolute top-4 right-6 text-white/60 hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                <div id="pkgTag" class="text-[10px] bg-white/20 text-white px-3 py-1 rounded-full uppercase tracking-widest font-bold inline-block mb-3">Хит</div>
+                <h3 id="pkgTitle" class="text-3xl font-bold mb-2">Название пакета</h3>
+                <p id="pkgSubtitle" class="text-neo-100 text-sm">Короткое описание</p>
+                <input type="hidden" id="pkgIdStorage">
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto flex-1 bg-fafafa">
+                <div class="mb-6">
+                    <h4 class="font-bold text-neo-dark flex items-center gap-2 mb-2"><i class="fa-solid fa-bullseye text-neo-500"></i> Для кого подходит:</h4>
+                    <p id="pkgTarget" class="text-sm text-slate-600 leading-relaxed bg-white p-4 rounded-xl border border-slate-100 shadow-sm"></p>
+                </div>
+                <div class="mb-6">
+                    <h4 class="font-bold text-neo-dark flex items-center gap-2 mb-3"><i class="fa-solid fa-stethoscope text-neo-500"></i> Что входит в программу:</h4>
+                    <ul id="pkgIncludes" class="space-y-3 text-sm text-slate-700 bg-white p-4 rounded-xl border border-slate-100 shadow-sm"></ul>
+                </div>
+                <div class="mb-2">
+                    <h4 class="font-bold text-neo-dark flex items-center gap-2 mb-2"><i class="fa-solid fa-ranking-star text-neo-500"></i> Объективный результат:</h4>
+                    <p id="pkgResult" class="text-sm text-slate-600 leading-relaxed bg-white p-4 rounded-xl border border-neo-100/50 shadow-sm"></p>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-200 bg-white flex flex-col md:flex-row items-center justify-between gap-4 shrink-0">
+                <div class="flex flex-col w-full md:w-auto text-center md:text-left">
+                    <div class="flex items-center justify-center md:justify-start gap-3 mb-1">
+                        <span id="pkgOldPrice" class="text-slate-400 line-through text-sm">0 ₸</span>
+                        <span id="pkgProfit" class="bg-neo-500 text-white text-[10px] uppercase font-bold px-2 py-0.5 rounded">Выгода 0 ₸</span>
+                    </div>
+                    <div id="pkgPrice" class="text-3xl font-bold text-neo-dark">0 ₸</div>
+                </div>
+                <div class="w-full md:w-auto text-center">
+                    <button id="pkgAddBtn" onclick="togglePackageFromModal()" class="group/btn w-full bg-neo-500 hover:bg-neo-600 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition shadow-lg shadow-neo-500/30 transform hover:-translate-y-0.5 mb-2">
+                        <i class="fa-solid fa-plus mr-1"></i> Добавить в расчет
+                    </button>
+                    <div class="text-[9px] text-slate-400 max-w-[250px] mx-auto leading-tight">Добавьте в План визита, чтобы мы рассчитали итоговую стоимость без обязательств.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно "ПЛАН ВИЗИТА" -->
+    <div id="planModal" class="fixed inset-0 bg-neo-900/90 backdrop-blur-sm z-[120] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="planModalContent">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white shrink-0">
+                <h3 class="text-2xl font-bold text-neo-dark flex items-center gap-2"><i class="fa-solid fa-clipboard-list text-neo-500"></i> План вашего визита</h3>
+                <button onclick="closePlanModal()" class="text-slate-400 hover:text-neo-500 transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-50">
+                <p class="text-sm text-slate-500 mb-4">Это предварительный список услуг. Администратор свяжется с вами, уточнит детали и подтвердит запись.</p>
+                <div id="planItemsList" class="space-y-2 mb-6"></div>
+                <div class="flex justify-between items-end border-t border-slate-200 pt-4 mb-8">
+                    <span class="text-slate-500 font-medium">Ориентировочно:</span>
+                    <span class="text-2xl font-bold text-neo-dark" id="planModalTotal">0 ₸</span>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-neo-dark mb-4 text-lg">Отправить расчет в клинику</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Ваше имя</label>
+                            <input type="text" id="orderName" placeholder="Как к вам обращаться?" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-neo-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Телефон (WhatsApp)</label>
+                            <input type="tel" id="orderPhone" placeholder="+7 (___) ___-__-__" class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-neo-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">В какой филиал вам удобнее?</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="border border-slate-200 rounded-xl p-3 flex items-start gap-2 cursor-pointer hover:border-neo-500 transition has-[:checked]:border-neo-500 has-[:checked]:bg-neo-50">
+                                    <input type="radio" name="orderBranch" value="tolebi" checked class="mt-1 accent-neo-500">
+                                    <div>
+                                        <div class="font-bold text-sm text-neo-dark">Толе би, 61</div>
+                                        <div class="text-[10px] text-slate-500">пн-пт до 16:00</div>
+                                    </div>
+                                </label>
+                                <label class="border border-slate-200 rounded-xl p-3 flex items-start gap-2 cursor-pointer hover:border-neo-500 transition has-[:checked]:border-neo-500 has-[:checked]:bg-neo-50">
+                                    <input type="radio" name="orderBranch" value="alfarabi" class="mt-1 accent-neo-500">
+                                    <div>
+                                        <div class="font-bold text-sm text-neo-dark">Аль-Фараби, 29</div>
+                                        <div class="text-[10px] text-slate-500">пн-пт до 17:00</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-slate-200 bg-white shrink-0 text-center">
+                <button onclick="submitOrder()" class="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white px-10 py-3.5 rounded-xl text-base font-bold transition shadow-lg shadow-green-500/30 transform hover:-translate-y-0.5 mb-3 flex items-center justify-center gap-2 mx-auto">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Отправить администратору
+                </button>
+                <div class="text-[10px] text-slate-400">Нажимая кнопку, вы соглашаетесь с <button onclick="openLegalModal('privacy')" class="underline hover:text-neo-500">Политикой конфиденциальности</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно ОПИСАНИЯ УСЛУГИ -->
+    <div id="serviceInfoModal" class="fixed inset-0 bg-neo-900/70 backdrop-blur-sm z-[130] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="serviceInfoModalContent">
+            <div class="p-6 border-b border-neo-100 flex justify-between items-start bg-neo-50">
+                <h3 id="serviceInfoTitle" class="text-lg font-bold text-neo-dark pr-4 leading-tight">Название</h3>
+                <button onclick="closeServiceInfoModal()" class="text-slate-400 hover:text-neo-500 transition mt-1"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 text-sm text-slate-600 leading-relaxed">
+                <p id="serviceInfoDesc">Описание услуги</p>
+            </div>
+            <div class="p-6 border-t border-slate-100 bg-fafafa text-center">
+                <button onclick="closeServiceInfoModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-8 py-2.5 rounded-xl text-sm font-bold transition">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно ЮРИДИЧЕСКИХ ДОКУМЕНТОВ И ИНФО -->
+    <div id="legalModal" class="fixed inset-0 bg-neo-900/80 backdrop-blur-sm z-[130] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="legalModalContent">
+            <div class="p-5 md:p-6 border-b border-neo-100 flex justify-between items-center bg-slate-50 shrink-0">
+                <h3 id="legalTitle" class="text-xl font-bold text-neo-dark">Документ</h3>
+                <button onclick="closeLegalModal()" class="text-slate-400 hover:text-neo-500 transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto flex-1 bg-white text-sm text-slate-600 leading-relaxed space-y-4" id="legalText"></div>
+        </div>
+    </div>
+
+    <!-- ==================== СКРИПТЫ ==================== -->
+    <script>
+        let visitPlan = [];
+
+        function parsePrice(priceStr) { return parseInt(priceStr.replace(/\D/g, ''), 10) || 0; }
+        function formatPrice(num) { return num.toLocaleString('ru-RU') + ' ₸'; }
+
+        // Эффекты при прокрутке
+        document.addEventListener('scroll', function() {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 10) {
+                header.classList.add('header-glass');
+                header.classList.replace('py-4', 'py-2');
+                header.classList.replace('md:py-6', 'md:py-3');
+            } else {
+                header.classList.remove('header-glass');
+                header.classList.replace('py-2', 'py-4');
+                header.classList.replace('md:py-3', 'md:py-6');
+            }
+        });
+
+        // Анимация промо-блоков при скролле
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-on-scroll').forEach((elem) => {
+                observer.observe(elem);
+            });
+        });
+
+        // РАСШИРЕННАЯ БАЗА ДАННЫХ ИЗ ТАБЛИЦ (ПО 2 ПРЕДЛОЖЕНИЯ)
+        const db = [
+            // ВРАЧИ
+            { category: 'doctor', title: 'Первичная консультация терапевта', price: '15 000 ₸', desc: 'Профессиональный осмотр врача, детальный сбор анамнеза, разбор анализов и назначение индивидуальной схемы лечения. Помогает выявить истинные причины недомогания и составить точный план восстановления.' },
+            { category: 'doctor', title: 'Повторная консультация терапевта', price: '7 500 ₸', desc: 'Оценка динамики лечения и корректировка текущих назначений. Врач проанализирует изменения в вашем состоянии и при необходимости обновит терапию.' },
+            { category: 'doctor', title: 'Выезд на дом терапевта', price: '25 000 ₸', desc: 'Осмотр квалифицированного врача на дому в комфортных для пациента условиях. Идеальное решение при плохом самочувствии, когда нет возможности приехать в клинику.' },
+            { category: 'doctor', title: 'Первичная консультация педиатра', price: '15 000 ₸', desc: 'Осмотр ребенка, сбор анамнеза, назначение необходимых анализов и безопасной схемы лечения. Бережный и внимательный подход к здоровью вашего малыша без стресса и слез.' },
+            { category: 'doctor', title: 'Повторная консультация педиатра', price: '7 500 ₸', desc: 'Оценка динамики состояния ребенка после начала лечения. Врач проверит эффективность назначений и даст дальнейшие рекомендации родителям.' },
+            { category: 'doctor', title: 'Выезд на дом педиатра', price: '25 000 ₸', desc: 'Выезд опытного детского врача на дом для осмотра ребенка в привычной обстановке. Минимизирует риски контактов с инфекциями в периоды простуд и эпидемий.' },
+
+            // ПРОЦЕДУРНЫЙ КАБИНЕТ
+            { category: 'proc', title: 'Внутримышечный укол (в/м)', price: '1 200 ₸', desc: 'Классическая инъекция препарата в мышцу для быстрого усвоения организмом. Процедура проводится максимально безболезненно опытными медицинскими сестрами.' },
+            { category: 'proc', title: 'Укол в/в (внутривенный)', price: '2 000 ₸', desc: 'Введение препарата напрямую в вену с помощью шприца для мгновенного действия. Обеспечивает 100% биодоступность лекарственного средства.' },
+            { category: 'proc', title: 'в/в внутривено-капельно (1 флакон)', price: '3 000 ₸', desc: 'Постановка капельницы для мягкого и длительного поступления лекарства в кровь. Идеально подходит для восстановления дефицитов и проведения IV-терапии.' },
+            { category: 'proc', title: 'в/в внутривено-капельно (дополнительно)', price: '1 500 ₸', desc: 'Подключение второго и последующих флаконов к текущей внутривенной системе. Позволяет комбинировать несколько препаратов в рамках одного лечебного сеанса.' },
+            { category: 'proc', title: 'в/в внутривено-струйно (вместе с в/в капельно)', price: '1 500 ₸', desc: 'Струйное введение дополнительного препарата в систему во время проведения капельницы. Усиливает эффект основной терапии без необходимости делать лишние проколы вены.' },
+            { category: 'proc', title: 'Забор крови', price: '2 000 ₸', desc: 'Аккуратный забор венозной крови для всех видов лабораторных исследований. Используются современные вакуумные системы-бабочки, минимизирующие дискомфорт.' },
+            { category: 'proc', title: 'Дополнительная система', price: '1 500 ₸', desc: 'Дополнительный расходник, необходимый при сложных многокомпонентных капельницах. Гарантирует абсолютную стерильность и безопасность смешивания препаратов.' },
+            { category: 'proc', title: 'Проба', price: '800 ₸', desc: 'Кожная проба на переносимость препарата для исключения риска аллергии. Обязательный этап перед введением новых или потенциально опасных лекарств.' },
+            { category: 'proc', title: 'Экспресс тест на сахар', price: '1 000 ₸', desc: 'Быстрое определение уровня глюкозы в крови из пальца с выдачей результата сразу на месте. Помогает оперативно оценить углеводный обмен перед процедурами.' },
+            { category: 'proc', title: 'Деоденальное зондирование 1 процедура', price: '15 000 ₸', desc: 'Глубокое очищение желчных путей для улучшения работы печени и снятия чувства тяжести. Процедура отлично нормализует пищеварение и способствует естественному детоксу.' },
+            { category: 'proc', title: 'Подкожно (липосамально)', price: '3 500 ₸', desc: 'Инъекция препарата под кожу, часто используемая для мягкого рассасывания. Обеспечивает медленное и постепенное высвобождение действующего вещества.' },
+            { category: 'proc', title: 'Озонтерапия (Озон) 1 процедура', price: '8 500 ₸', desc: 'Насыщение крови активным кислородом для мощного и естественного поднятия иммунитета. Процедура дает мгновенный заряд энергии и улучшает микроциркуляцию тканей.' },
+            { category: 'proc', title: 'Озон 5 процедур', price: '38 000 ₸', desc: 'Мини-курс озонотерапии для закрепления стойкого лечебного эффекта. Выгодное предложение для тех, кто хочет восстановить силы и защитить организм от инфекций.' },
+            { category: 'proc', title: 'Озон 10 процедур', price: '74 000 ₸', desc: 'Полноценный курс озонотерапии для глубокого и комплексного оздоровления организма. Максимальная выгода и превосходный результат в лечении хронической усталости.' },
+
+            // IV ТЕРАПИЯ
+            { category: 'iv', title: 'NEO BEAUTY', price: '42 000 ₸', desc: 'Авторская капельница для сияния кожи, глубокого увлажнения изнутри и мощного anti-age эффекта. Насыщает клетки антиоксидантами, возвращая молодость и упругость тканей.' },
+            { category: 'iv', title: 'NEO DETOX', price: '42 000 ₸', desc: 'Комплексное очищение организма, возвращающее чувство легкости и запускающее естественные процессы обновления. Эффективно выводит накопленные токсины, снимает отечность и восстанавливает работу печени.' },
+            { category: 'iv', title: 'NEO ENERGI', price: '48 000 ₸', desc: 'Ударный заряд бодрости для снятия сильного стресса, апатии и синдрома хронической усталости. Восполняет энергетические ресурсы клеток, возвращая вам высокую продуктивность и желание действовать.' },
+            { category: 'iv', title: 'NEO IQ', price: '48 000 ₸', desc: 'Специализированный витаминный коктейль для ясного ума, высокой концентрации и активной поддержки функций мозга. Улучшает память, когнитивные способности и защищает нейроны от переутомления.' },
+            { category: 'iv', title: 'Капельница "Золушка" 1 процедура', price: '20 000 ₸', desc: 'Мощный антиоксидантный комплекс на основе глутатиона, дающий эффект свежего и отдохнувшего лица. Заметно осветляет нежелательную пигментацию и выравнивает общий тон кожи.' },
+            { category: 'iv', title: 'Капельница аллергии', price: '15 000 ₸', desc: 'Быстрое и эффективное снятие острых аллергических реакций, навязчивого зуда и покраснений. Мгновенно блокирует выброс гистамина, возвращая вам комфортное самочувствие.' },
+            { category: 'iv', title: 'Капельница противоотечная', price: '28 000 ₸', desc: 'Стимуляция лимфотока для вывода лишней застоявшейся жидкости и снятия сильных отеков любой локализации. Дарит невероятное чувство легкости во всем теле и аккуратно корректирует объемы.' },
+
+            // ПРЕПАРАТЫ
+            { category: 'drugs', title: 'Актовегин (1 амп)', price: '2 500 ₸', desc: 'Улучшает питание клеток кислородом и ускоряет регенерацию поврежденных тканей. Эффективен при нарушениях кровообращения и для восстановления после травм.' },
+            { category: 'drugs', title: 'Анальгин (1 амп)', price: '300 ₸', desc: 'Быстрое и надежное средство для снятия интенсивного болевого синдрома и снижения высокой температуры. Применяется для экстренной помощи при лихорадке и болях.' },
+            { category: 'drugs', title: 'Аскорбиновая кислота (1 амп)', price: '300 ₸', desc: 'Высокая дозировка витамина С для мощной стимуляции иммунитета и выработки собственного коллагена. Защищает клетки от окислительного стресса и вирусных атак.' },
+            { category: 'drugs', title: 'В 12 (укол)', price: '250 ₸', desc: 'Витамин В12, критически важный для кроветворения и правильной работы нервной системы. Быстро устраняет симптомы анемии, покалывания в конечностях и хроническую слабость.' },
+            { category: 'drugs', title: 'Венофер', price: '3 300 ₸', desc: 'Качественный препарат внутривенного железа для быстрого и безопасного поднятия уровня ферритина. Эффективно борется со скрытым дефицитом железа, устраняя слабость и выпадение волос.' },
+            { category: 'drugs', title: 'Витамин Д (1 амп)', price: '5 500 ₸', desc: 'Инъекция солнечного витамина для формирования крепкого иммунитета, здоровых костей и защиты от депрессии. Мгновенно восполняет дефицит, минуя желудочно-кишечный тракт.' },
+            { category: 'drugs', title: 'Витамин С (внутривенно)', price: '12 000 ₸', desc: 'Внутривенное введение витамина С в сверхвысокой дозировке для максимального 100% усвоения. Обеспечивает мощную противовирусную защиту и интенсивно стимулирует обновление кожи.' },
+            { category: 'drugs', title: 'Витамины группы B (Турция)', price: '8 560 ₸', desc: 'Сбалансированный комплекс качественных витаминов группы B турецкого производства. Необходим для крепких нервов, улучшения обмена веществ и поддержания красоты кожи и волос.' },
+            { category: 'drugs', title: 'Гептрал', price: '8 500 ₸', desc: 'Препарат премиум-класса для глубокого восстановления клеток печени и улучшения ее детоксикационной функции. Обладает доказанным легким антидепрессивным действием, заметно улучшая настроение.' },
+            { category: 'drugs', title: 'Глютатион (Италия)', price: '14 900 ₸', desc: 'Главный антиоксидант организма для королевского детокса, системного омоложения и надежной защиты печени. Эффективно нейтрализует свободные радикалы, придавая коже внутреннее свечение.' },
+            { category: 'drugs', title: 'Дексаметазон (1 амп)', price: '700 ₸', desc: 'Мощный гормональный препарат для быстрого купирования сильных воспалений и тяжелых острых аллергий. Применяется строго по показаниям врача для оказания экстренной помощи.' },
+            { category: 'drugs', title: 'Дематон Б нео (1 амп)', price: '1 500 ₸', desc: 'Сбалансированный комплекс витаминов группы В для быстрого восполнения жизненной энергии. Отлично поддерживает нервную систему в периоды повышенного стресса и умственных нагрузок.' },
+            { category: 'drugs', title: 'Диклоберл (1 амп)', price: '1 500 ₸', desc: 'Эффективное обезболивающее и противовоспалительное средство современного поколения. Идеально подходит для быстрого снятия острых болей в суставах, зажатых мышцах и пояснице.' },
+            { category: 'drugs', title: 'Димедрол (1 амп)', price: '300 ₸', desc: 'Классический препарат, надежно снимающий аллергические проявления и раздражающий зуд. Обладает выраженным успокаивающим и легким приятным снотворным эффектом.' },
+            { category: 'drugs', title: 'Димефосфон (1 амп)', price: '2 100 ₸', desc: 'Препарат для нормализации мозгового кровообращения и восстановления правильного кислотно-щелочного баланса. Улучшает адаптацию организма к физическим нагрузкам и гипоксии.' },
+            { category: 'drugs', title: 'Железо', price: '6 400 ₸', desc: 'Инъекционный препарат для эффективного лечения подтвержденной анемии и восполнения запасов железа. Быстро возвращает жизненные силы, энергию и устраняет хроническую усталость.' },
+            { category: 'drugs', title: 'Кальций глюконат (Укол горячий)', price: '650 ₸', desc: 'Известный горячий укол для стремительного восполнения дефицита кальция в организме. Эффективно снимает воспалительные процессы и помогает при комплексном лечении сложных аллергий.' },
+            { category: 'drugs', title: 'Кортексин (1 амп)', price: '4 500 ₸', desc: 'Современный ноотропный препарат, глубоко и бережно питающий клетки головного мозга. Значительно улучшает память, повышает концентрацию внимания и общую способность к обучению.' },
+            { category: 'drugs', title: 'Коффеин (1 амп)', price: '150 ₸', desc: 'Препарат для мягкой стимуляции центральной нервной системы и аккуратного повышения артериального давления. Помогает справиться с сильной сонливостью, астенией и признаками гипотонии.' },
+            { category: 'drugs', title: 'Лидокаин (1 амп)', price: '400 ₸', desc: 'Качественное местное обезболивающее средство, надежно блокирующее болевые нервные импульсы. Обеспечивает максимальный комфорт и абсолютную безболезненность при проведении инъекций.' },
+            { category: 'drugs', title: 'Лимфомиозот', price: '2 700 ₸', desc: 'Доказанный гомеопатический препарат для стимуляции лимфодренажа и очищения тканей на клеточном уровне. Отлично убирает утренние отеки, застои жидкости и поддерживает местный иммунитет.' },
+            { category: 'drugs', title: 'Магний сульфат (1 амп)', price: '500 ₸', desc: 'Надежное средство для быстрого снижения артериального давления и расслабления перегруженной нервной системы. Эффективно снимает спазмы гладкой мускулатуры и мышечные судороги.' },
+            { category: 'drugs', title: 'Мексидол (1 амп)', price: '1 500 ₸', desc: 'Антиоксидант, улучшающий кровоснабжение мозга и значительно повышающий его устойчивость к нехватке кислорода. Помогает легко справиться со стрессами, тревогой и частыми головными болями.' },
+            { category: 'drugs', title: 'Метрид (1 фл)', price: '1 200 ₸', desc: 'Противомикробный препарат широкого спектра действия для безопасного внутривенного капельного введения. Эффективно борется с системными инфекциями различной этиологии.' },
+            { category: 'drugs', title: 'Метрогил', price: '6 400 ₸', desc: 'Мощный внутривенный противомикробный и противопротозойный препарат направленного действия. Применяется врачами для лечения тяжелых инфекционно-воспалительных заболеваний.' },
+            { category: 'drugs', title: 'Мильгамма (1 амп)', price: '2 500 ₸', desc: 'Комбинированный препарат витаминов группы В с ярко выраженным нейротропным и заживляющим действием. Восстанавливает нервную систему, эффективно снимает боли в спине и невралгию.' },
+            { category: 'drugs', title: 'Но-шпа (1 амп)', price: '1 100 ₸', desc: 'Популярное и проверенное средство для быстрого снятия болезненных спазмов сосудов и гладкой мускулатуры. Отлично помогает при резких болях в животе, спазмах ЖКТ и желчных путей.' },
+            { category: 'drugs', title: 'Новокаин (1 амп)', price: '250 ₸', desc: 'Классическое местное обезболивающее средство с умеренной анестезирующей активностью. Часто применяется для разведения порошковых препаратов и уменьшения боли при внутримышечных инъекциях.' },
+            { category: 'drugs', title: 'Пиридоксин гидрохлорид В6 (1 амп)', price: '300 ₸', desc: 'Витамин В6, играющий ключевую и важнейшую роль в правильном обмене аминокислот и белков. Поддерживает нормальную работу мозга и значительно улучшает клетоечное усвоение магния.' },
+            { category: 'drugs', title: 'Преднизалон (1 амп)', price: '800 ₸', desc: 'Быстродействующее гормональное средство для спасения при тяжелых аллергиях и шоковых состояниях. Мгновенно купирует острые воспалительные процессы любой локализации.' },
+            { category: 'drugs', title: 'Реамберин', price: '14 500 ₸', desc: 'Мощный детоксикационный раствор для бережного внутривенного капельного введения. Эффективно выводит вредные токсины после пищевых отравлений, тяжелых инфекций или злоупотребления алкоголем.' },
+            { category: 'drugs', title: 'Ремаксол', price: '16 000 ₸', desc: 'Современный гепатопротекторный коктейль для комплексного восстановления поврежденных клеток печени. Запускает глубокий медицинский детокс организма и нормализует нарушенный метаболизм.' },
+            { category: 'drugs', title: 'Супрастин (1 амп)', price: '1 500 ₸', desc: 'Проверенное временем и миллионами пациентов антигистаминное средство первого поколения. Быстро и надежно помогает против острых аллергических реакций и зудящих кожных дерматозов.' },
+            { category: 'drugs', title: 'Тиогамма / Теогамма', price: '6 700 ₸', desc: 'Препарат альфа-липоевой кислоты, глобально улучшающий энергетический обмен веществ во всех тканях. Надежно защищает печень и нервные окончания, что особенно критично важно при сахарном диабете.' },
+            { category: 'drugs', title: 'Тиосульфат натрия (1 амп)', price: '1 200 ₸', desc: 'Средство для глубокого системного медицинского детокса и безопасного очищения организма. Успешно и часто применяется при различных химических отравлениях, псориазе и сильной затяжной аллергии.' },
+            { category: 'drugs', title: 'Траумель', price: '4 800 ₸', desc: 'Многокомпонентный безопасный гомеопатический препарат с выраженным регенерирующим действием. Мягко и без побочных эффектов снимает боль и воспаление при спортивных травмах, растяжениях и болезнях суставов.' },
+            { category: 'drugs', title: 'Феброфид (кетотоп) (1 амп)', price: '1 250 ₸', desc: 'Сильное обезболивающее и эффективное противовоспалительное средство на основе кетопрофена. Назначается врачами для быстрого купирования выраженных болевых синдромов в мышцах и крупных суставах.' },
+            { category: 'drugs', title: 'Церукал (1 амп)', price: '660 ₸', desc: 'Специфический блокатор дофаминовых рецепторов, быстро нормализующий моторику и работу ЖКТ. Надежно и эффективно снимает приступы тошноты любой природы и останавливает изнуряющую рвоту.' },
+            { category: 'drugs', title: 'Цефозолин (1 амп)', price: '2 500 ₸', desc: 'Надежный инъекционный антибиотик широкого спектра действия из группы безопасных цефалоспоринов. Успешно применяется для лечения множества острых и затяжных бактериальных инфекций.' },
+            { category: 'drugs', title: 'Цитофлавин (1 амп)', price: '4 200 ₸', desc: 'Комплексный метаболический препарат, значительно улучшающий клеточное дыхание тканей мозга. Буквально спасает при диагностированном синдроме хронической усталости и долгом восстановлении после тяжелых болезней.' },
+            { category: 'drugs', title: 'Эуфиллин (1 амп)', price: '200 ₸', desc: 'Сильное бронхолитическое средство, мгновенно снимающее опасный спазм дыхательных путей. Быстро расширяет суженные бронхи, существенно облегчает дыхание и снижает давление в легочной артерии.' },
+
+            // ОБЩЕКЛИНИЧЕСКИЕ (с добавленными жесткими ID для 4х главных услуг)
+            { id: 'parasep', category: 'lab_other', title: 'Parasep (кал)', price: '7 500 ₸', desc: 'Абсолютный золотой стандарт современной лабораторной диагностики паразитарных инфекций. Это самый точный на сегодняшний день метод выявления яиц гельминтов и простейших без ложных результатов.' },
+            { id: 'hms', category: 'lab_other', title: 'ХМС по Осипову', price: '35 000 ₸', desc: 'ХМС по Осипову это лабораторный анализ, который проводится методом хромато-масс-спектрометрии и позволяет определить метаболиты бактерий, грибов и микроорганизмов в организме. Исследование помогает оценить состояние микробиоты кишечника, выявить скрытые инфекции, дисбиоз, грибковую нагрузку и воспалительные процессы' },
+            { id: 'hair_micro', category: 'lab_other', title: 'Микроэлементы для волос', price: '53 000 ₸', desc: 'Специфическое исследование, выявляющее скрытые дефициты витаминов и избыток тяжелых металлов по химическому составу волоса. Помогает найти истинную, глубинную причину алопеции и потери густоты.' },
+            { category: 'lab_other', title: 'Клинический анализ крови с лейкоцитарной формулой и СОЭ (ОАК)', price: '2 760 ₸', desc: 'Базовое и самое важное исследование для оценки общего состояния здоровья пациента. Позволяет оперативно выявить скрытые воспаления, наличие вирусных инфекций и первые признаки анемии.' },
+            { category: 'lab_other', title: 'Общий анализ мочи с микроскопией осадка', price: '1 580 ₸', desc: 'Комплексная оценка корректной работы почек, мочевого пузыря и мочевыводящих путей. Помогает на самых ранних стадиях обнаружить воспалительные процессы и серьезные нарушения обмена веществ.' },
+            { category: 'lab_other', title: 'Анализ мочи по Нечипоренко', price: '1 580 ₸', desc: 'Детальное микроскопическое исследование мочи при серьезном подозрении на скрытое воспаление почек. Более точно определяет точное количество лейкоцитов и эритроцитов по сравнению с обычным ОАМ.' },
+            { category: 'lab_other', title: 'Копрограмма (кал)', price: '5 300 ₸', desc: 'Комплексная лабораторная оценка качества переваривания пищи и общей работы желудочно-кишечного тракта. Четко выявляет ферментативную недостаточность поджелудочной железы и воспаления в кишечнике.' },
+            { category: 'lab_other', title: 'Определение панкреатической эластазы в кале', price: '11 360 ₸', desc: 'Специфический и высокоточный маркер оценки реальной экзокринной функции поджелудочной железы. Необходим врачу при хронических нерешаемых проблемах с пищеварением, болях и постоянных вздутиях.' },
+            { category: 'lab_other', title: 'Определение фекального кальпротектина', price: '14 860 ₸', desc: 'Крайне чувствительный неинвазивный маркер воспалительных заболеваний кишечника (ВЗК). Помогает гастроэнтерологу дифференцировать обычный синдром раздраженного кишечника от опасной болезни Крона.' },
+
+            // БИОХИМИЯ КРОВИ
+            { category: 'blood_bio', title: 'Аланинаминотрансфераза (АЛТ)', price: '1 780 ₸', desc: 'Внутриклеточный фермент, выступающий главным и самым точным индикатором повреждения клеток печени. Его повышение сразу же сигнализирует о скрытых воспалительных или токсических разрушительных процессах.' },
+            { category: 'blood_bio', title: 'Аспартатаминотрансфераза (АСТ)', price: '1 780 ₸', desc: 'Важнейший фермент, отражающий состояние тканей печени и здоровой сердечной мышцы. Анализируется врачом обязательно совместно с АЛТ для точной диагностики гепатитов и скрытых повреждений миокарда.' },
+            { category: 'blood_bio', title: 'Гаммаглютамилтрансфераза (ГГТП)', price: '1 780 ₸', desc: 'Высокочувствительный биохимический маркер застоя желчи (холестаза) и токсического поражения печени. Остро реагирует на частый прием некоторых тяжелых лекарств и регулярное употребление алкоголя.' },
+            { category: 'blood_bio', title: 'Билирубин общий', price: '1 780 ₸', desc: 'Ключевой пигментный показатель корректной работы печени и нормальной проходимости желчевыводящих путей. Его сильное повышение часто визуально сопровождается пожелтением склер глаз и кожных покровов.' },
+            { category: 'blood_bio', title: 'Глюкоза (сахар крови)', price: '1 780 ₸', desc: 'Базовый и обязательный биохимический маркер для ранней диагностики сахарного диабета и предиабета. Контроль этого показателя жизненно необходим для оценки правильности всего углеводного обмена.' },
+            { category: 'blood_bio', title: 'Гликозилированный гемоглобин HbA1С', price: '4 200 ₸', desc: 'Специфический анализ, математически точно показывающий ваш средний уровень сахара в крови за последние 3 месяца. Это самый достоверный в мире способ контроля и выявления скрытого течения сахарного диабета.' },
+            { category: 'blood_bio', title: 'Креатинин', price: '1 780 ₸', desc: 'Специфический продукт мышечного обмена, кристально четко отражающий фильтрационную и выделительную функцию почек. Является главным и первым маркером развития опасной почечной недостаточности.' },
+            { category: 'blood_bio', title: 'Мочевина', price: '1 780 ₸', desc: 'Конечный продукт распада потребляемых белков в организме, выводимый исключительно почками. Помогает врачу оценить баланс белкового обмена и вовремя подтвердить или исключить патологии почек.' },
+            { category: 'blood_bio', title: 'Мочевая кислота', price: '1 780 ₸', desc: 'Специфический показатель для ранней диагностики развития подагры и оценки риска образования камней в почках. Ее хронический избыток приводит к болезненному отложению кристаллов солей в суставах.' },
+            { category: 'blood_bio', title: 'Общий белок', price: '1 780 ₸', desc: 'Суммарный показатель концентрации всех жизненно важных белков в сыворотке крови. Отражает общее нутритивное состояние организма пациента, работу иммунитета и степень белкового истощения.' },
+            { category: 'blood_bio', title: 'Холестерин общий', price: '1 780 ₸', desc: 'Базовый липидный показатель, который критически необходим для синтеза половых гормонов и клеточных мембран. При этом его избыток прямо указывает на повышенный риск развития опасного атеросклероза сосудов.' },
+            { category: 'blood_bio', title: 'Липидный спектр', price: '5 600 ₸', desc: 'Развернутый профиль жиров: общий холестерин, "плохой" ЛПНП, "хороший" ЛПВП и триглицериды. Дает врачу полную и ясную картину риска инфарктов, инсультов и образования холестериновых бляшек.' },
+            { category: 'blood_bio', title: 'Железо (Fe)', price: '1 780 ₸', desc: 'Прямая оценка текущего уровня сывороточного железа, циркулирующего в данный момент в крови. Входит в базовый и обязательный комплекс обследования при малейшем подозрении на железодефицитную анемию.' },
+            { category: 'blood_bio', title: 'Ферритин', price: '3 100 ₸', desc: 'Особый белок, депонирующий (надежно запасающий) свободное железо в тканях организма. Является самым ранним и самым точным маркером выявления скрытого дефицита железа и сильного выпадения волос.' },
+            { category: 'blood_bio', title: '25-OH витамин D общий', price: '8 200 ₸', desc: 'Главный маркер определения уровня запасов витамина D, регулирующего иммунитет и усвоение кальция. Острый дефицит этого витамина лабораторно подтверждается у подавляющего большинства жителей нашего региона.' },
+            { category: 'blood_bio', title: 'Витамин В12', price: '4 640 ₸', desc: 'Критически важный витамин для нормальной работы центральной нервной системы и здоровых процессов кроветворения. При его нехватке у пациентов развиваются тяжелая анемия, апатия и заметные нарушения памяти.' },
+            { category: 'blood_bio', title: 'Фолиевая кислота (фолат)', price: '4 640 ₸', desc: 'Витамин В9, принимающий самое активное участие в процессах деления клеток и постоянном обновлении тканей. Жизненно и абсолютно необходим на этапе планирования и в период течения здоровой беременности.' },
+            { category: 'blood_bio', title: 'С-реактивный белок (СРБ)', price: '2 480 ₸', desc: 'Самый чувствительный и точный маркер острой фазы воспаления в организме, реагирующий быстрее любых других анализов. Безошибочно помогает врачу отличить сложную бактериальную инфекцию от вирусной.' },
+            { category: 'blood_bio', title: 'Ревматоидный фактор (РФ)', price: '3 020 ₸', desc: 'Специфический лабораторный маркер, указывающий на наличие тяжелых аутоиммунных поражений соединительной ткани. Основной и незаменимый анализ для подтверждения диагноза ревматоидного артрита.' },
+
+            // ГОРМОНЫ
+            { category: 'blood_hormones', title: 'ТТГ (тиреотропный гормон)', price: '3 420 ₸', desc: 'Главный гормон гипофиза, являющийся основным "дирижером" и регулятором работы щитовидной железы. Это первый и самый важный базовый анализ для скрининга практически всех возможных эндокринных нарушений.' },
+            { category: 'blood_hormones', title: 'Т3 свободный', price: '3 780 ₸', desc: 'Биологически активная и очень сильная фракция гормона щитовидной железы, напрямую стимулирующая обмен веществ. Помогает превентивным врачам выявить так называемый скрытый тканевой гипотиреоз.' },
+            { category: 'blood_hormones', title: 'Т4 свободный', price: '3 420 ₸', desc: 'Основной гормон, вырабатываемый щитовидной железой и глобально влияющий на весь энергетический баланс организма. Его любые отклонения неизбежно ведут к набору веса, сильной усталости или чрезмерной возбудимости.' },
+            { category: 'blood_hormones', title: 'Анти-ТПО', price: '4 000 ₸', desc: 'Специфические антитела, ошибочно атакующие и повреждающие клетки собственной щитовидной железы. Считается главным и самым достоверным лабораторным признаком аутоиммунного тиреоидита (АИТ).' },
+            { category: 'blood_hormones', title: 'Пролактин', price: '3 780 ₸', desc: 'Многофункциональный гормон гипофиза, невероятно чутко реагирующий на любой стресс и нарушения режима сна. Влияет на работу репродуктивной функции, уровень либидо и общее психоэмоциональное состояние.' },
+            { category: 'blood_hormones', title: 'Тестостерон общий', price: '3 780 ₸', desc: 'Ключевой мужской половой гормон, всецело отвечающий за мышечную массу, жизненную энергию и здоровое либидо. При этом он также крайне важен для женщин в поддержании плотности костей и стабильного настроения.' },
+            { category: 'blood_hormones', title: 'Эстрадиол', price: '3 780 ₸', desc: 'Основной и самый биологически активный женский половой гормон из обширной группы эстрогенов. Обеспечивает здоровье всей репродуктивной системы, внешнюю красоту кожи и достаточную крепость сосудов.' },
+            { category: 'blood_hormones', title: 'ФСГ', price: '3 780 ₸', desc: 'Гормон гипофиза, стимулирующий правильный рост фолликулов у женщин и нормальный сперматогенез у мужчин. Служит надежным маркером функционального состояния половых желез и сроков наступления менопаузы.' },
+            { category: 'blood_hormones', title: 'ЛГ', price: '3 780 ₸', desc: 'Гонадотропный гормон, обеспечивающий правильный процесс овуляции у женщин и синтез тестостерона у мужчин. Обязательно оценивается гинекологами совместно с ФСГ для глубокой диагностики причин бесплодия.' },
+            { category: 'blood_hormones', title: 'Прогестерон', price: '3 780 ₸', desc: 'Важнейший гормон второй фазы менструального цикла, так называемый гормон сохранения беременности. Идеально подготавливает эндометрий матки к зачатию и поддерживает правильное вынашивание плода.' },
+            { category: 'blood_hormones', title: 'Инсулин', price: '5 120 ₸', desc: 'Гормон поджелудочной железы, регулирующий утилизацию глюкозы из крови клетками всего организма. Хронически высокий инсулин является главным и первым признаком опасной инсулинорезистентности и набора веса.' },
+            { category: 'blood_hormones', title: 'Индекс HOMA-IR', price: '5 880 ₸', desc: 'Расчетный математический индекс, вычисляемый лабораторией на основе уровней глюкозы и инсулина натощак. Это самый надежный и признанный в мире метод выявления скрытой инсулинорезистентности на ранней стадии.' },
+            { category: 'blood_hormones', title: 'Кортизол', price: '3 780 ₸', desc: 'Ключевой гормон надпочечников, интенсивно выделяющийся в ответ на острый или затяжной хронический стресс. Его постоянный избыток неминуемо ведет к истощению, потере мышечной массы и накоплению жира на животе.' },
+            { category: 'blood_hormones', title: 'ХГЧ (хорионический гонадотропин)', price: '3 780 ₸', desc: 'Специфический гормон, вырабатываемый исключительно тканями эмбриона сразу после успешной имплантации. Является самым ранним и на 100% достоверным маркером наступления и правильного развития беременности.' },
+            { category: 'blood_hormones', title: 'Анти-Мюллеров гормон (АМГ)', price: '10 460 ₸', desc: 'Точный и незаменимый маркер оценки овариального резерва (количества оставшихся яйцеклеток) у женщин. Помогает репродуктологам точно прогнозировать шансы на естественное зачатие или успешное ЭКО.' },
+            { category: 'blood_hormones', title: 'Паратгормон', price: '6 260 ₸', desc: 'Гормон паращитовидных желез, напрямую отвечающий за жесткую регуляцию обмена кальция и фосфора в теле. Крайне важен эндокринологам для диагностики причин остеопороза и рецидивирующего образования камней в почках.' },
+
+            // ИНФЕКЦИИ И ПЦР
+            { category: 'pcr', title: 'HBsAg (гепатит В)', price: '4 920 ₸', desc: 'Выявление специфического поверхностного антигена вируса гепатита В в сыворотке крови пациента. Является главным и самым ранним скрининговым тестом на наличие в организме этой опасной инфекции.' },
+            { category: 'pcr', title: 'Anti-HCV (гепатит С)', price: '4 420 ₸', desc: 'Высокоточное определение специфических антител, выработанных иммунитетом к вирусу гепатита С. Анализ подтверждает факт контакта организма с вирусом и требует дальнейшей, более детальной диагностики.' },
+            { category: 'pcr', title: 'Сифилис (Суммарные антитела)', price: '3 520 ₸', desc: 'Комплексный лабораторный скрининг на выявление суммарных антител к возбудителю сифилиса (бледной трепонеме). Это обязательный и стандартный анализ при подготовке к любым операциям и госпитализации.' },
+            { category: 'pcr', title: 'ВИЧ (Суммарные антитела и антиген p24)', price: '4 260 ₸', desc: 'Комбинированная диагностика наличия ВИЧ-инфекции путем одновременного выявления антител и антигена p24. Такая связка обеспечивает высочайшую точность и самое раннее обнаружение вируса в крови.' },
+            { category: 'pcr', title: 'Флороценоз NCMT (ПЦР)', price: '18 500 ₸', desc: 'Высокоточный ПЦР-анализ, выявляющий сразу 4 основные скрытые инфекции: гонорею, хламидиоз, микоплазму и трихомониаз. Позволяет обнаружить возбудителей даже при полностью бессимптомном течении болезни.' },
+            { category: 'pcr', title: 'Вирус папилломы человека (ВПЧ) 16-18 типов', price: '6 520 ₸', desc: 'Количественное выявление ДНК самых высокоонкогенных и опасных штаммов вируса папилломы человека (16 и 18 типы). Это важнейший мировой скрининг для предотвращения и профилактики рака шейки матки.' },
+            { category: 'pcr', title: 'Комплексное исследование Флороценоз №1', price: '24 400 ₸', desc: 'Самый развернутый ПЦР-скрининг для полной и детальной оценки микрофлоры всего урогенитального тракта. Показывает точное клиническое соотношение полезных лактобактерий и условно-патогенных микроорганизмов.' },
+            { category: 'pcr', title: 'Цитомегаловирус (CMV), ПЦР количественно', price: '7 560 ₸', desc: 'Сверхточное количественное определение ДНК цитомегаловируса передовым методом ПЦР. Помогает врачу оценить реальную степень активности инфекции и необходимость старта мощной противовирусной терапии.' },
+            { category: 'pcr', title: 'Герпес I, II типы (ПЦР)', price: '4 380 ₸', desc: 'Точное и безошибочное ПЦР-исследование для выявления генетического материала вирусов простого герпеса первого и второго типов. Анализ незаменим для диагностики истинных причин частых рецидивов высыпаний.' },
+
+            // АЛЛЕРГОПРОБЫ И НЕПЕРЕНОСИМОСТЬ
+            { id: 'food_intol', category: 'allergy', title: 'Пищевые непереносимости - Основная группа', price: '160 000 ₸', desc: 'Полный и максимально глубокий скрининг (IgG) на скрытую пищевую непереносимость к огромной базе продуктов питания. Успешно помогает найти неочевидную причину хронических воспалений, не проходящего акне, вздутий и постоянной усталости.' },
+            { category: 'allergy', title: 'Аллергопроба - 1 рабочий день', price: '7 500 ₸', desc: 'Быстрый лабораторный анализ на выявление специфических иммуноглобулинов E (IgE) к конкретным предполагаемым аллергенам. Позволяет врачу-аллергологу точно установить причину аллергической реакции в кратчайшие сроки.' },
+            { category: 'allergy', title: 'Аллергопроба - день в день', price: '9 500 ₸', desc: 'Экстренный лабораторный анализ на реактивность организма к аллергенам, выполняемый день в день без ожиданий. Незаменим в критических и острых ситуациях, требующих немедленного принятия правильных врачебных решений.' },
+            { category: 'allergy', title: 'ФадиАтоп', price: '13 200 ₸', desc: 'Универсальный и высокоточный скрининговый тест для стопроцентного подтверждения или исключения аллергической природы симптомов у взрослых. Безошибочно выявляет генетическую и приобретенную предрасположенность к атопии.' },
+            { category: 'allergy', title: 'ФадиАтоп детский', price: '13 200 ₸', desc: 'Специализированный скрининг аллергической реактивности, бережно адаптированный для развивающейся детской иммунной системы. Помогает родителям вовремя распознать истинную склонность ребенка к сложным аллергиям.' },
+            { category: 'allergy', title: 'Пакет «Медицинские аллергены»', price: '12 000 ₸', desc: 'Детальная лабораторная проверка иммунной реакции организма на базовые и часто используемые группы лекарственных препаратов. Надежно защищает пациента от опасных, непредвиденных осложнений и шока во время лечения.' },
+            { category: 'allergy', title: 'Панель аллергенов животных', price: '7 060 ₸', desc: 'Прицельное и точное исследование на выявление агрессивной аллергии к эпителию, перхоти и слюне кошек, собак и грызунов. Точно и однозначно определяет питомца, контакт с которым вызывает чихание и слезотечение.' },
+            
+            // ПАНЕЛИ ПИЩЕВЫХ НЕПЕРЕНОСИМОСТЕЙ
+            { category: 'allergy', title: 'Пищевая непереносимость: Камамбер, моцарелла, сыр "Дор Блю", козий сыр...', price: '14 900 ₸', desc: 'Детальный скрининг (IgG) на скрытую непереносимость элитных сортов сыра и молочных деликатесов. Позволяет выявить причину воспалительных реакций и нарушений пищеварения при их употреблении.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Молоко овечье, козье, шампиньоны, белые грибы...', price: '14 900 ₸', desc: 'Лабораторная оценка иммунной реакции (IgG) на альтернативные виды молока и грибы. Помогает скорректировать диету при необъяснимых кожных высыпаниях и дискомфорте в ЖКТ.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Гусь, конина, оленина, мясо лося, кабана, перепелка...', price: '14 900 ₸', desc: 'Анализ на пищевую непереносимость (IgG) к диетическим и экзотическим видам мяса. Незаменим для составления безопасного рациона при хронической усталости и аллергиях.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Осетр, стерлядь, севрюга, форель, семга, кета, горбуша, тунец', price: '14 900 ₸', desc: 'Скрининг скрытого воспаления (IgG), вызываемого красной рыбой и деликатесными сортами рыб. Обеспечивает точный подбор безопасных источников омега-3 для вашего организма.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Сельдь, морской окунь, ледяная рыба, пикша...', price: '14 900 ₸', desc: 'Тест на замедленную иммунную реакцию (IgG) к популярным видам морской рыбы. Позволяет исключить продукты, провоцирующие скрытое системное воспаление и отеки.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Окунь речной, сом, лещ, сазан, форель речная...', price: '14 900 ₸', desc: 'Выявление скрытой пищевой непереносимости (IgG) к речной и пресноводной рыбе. Помогает избавиться от тяжести в желудке и улучшить усвоение нутриентов.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Кефаль, рыба Талисман, черная треска, морской черт...', price: '14 900 ₸', desc: 'Глубокая диагностика иммунного ответа (IgG) на специфические сорта рыбы. Рекомендуется при поиске скрытых триггеров пищевой аллергии и атопического дерматита.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Телапия, ставрида, барабулька, дорада, камбала...', price: '14 900 ₸', desc: 'Анализ на замедленную пищевую реакцию (IgG) к популярным видам рыбного меню. Дает возможность составить идеальную диету без вреда для кишечной микрофлоры.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Черная икра, мидии, устрицы, морской гребешок...', price: '14 900 ₸', desc: 'Скрининг непереносимости (IgG) к морепродуктам и деликатесам. Выявляет скрытые воспалительные процессы, мешающие нормальному снижению веса и здоровью кожи.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Ячмень, перловка, бурый рис, нут, фасоль...', price: '14 900 ₸', desc: 'Оценка иммунной реакции (IgG) на базовые злаки и бобовые культуры. Помогает устранить хроническое вздутие, метеоризм и синдром раздраженного кишечника.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Тростниковый сахар, соль с пониженным натрием...', price: '14 900 ₸', desc: 'Лабораторный тест на скрытую реакцию (IgG) к специфическим пищевым добавкам и приправам. Важен для тонкой настройки рациона при системных воспалительных заболеваниях.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Розмарин, тимьян, орегано, карри, шафран...', price: '14 900 ₸', desc: 'Исследование иммунного ответа (IgG) на популярные травы и специи. Позволяет найти неочевидные причины постоянных высыпаний и дискомфорта после еды.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Капуста красная, брюссельская, кольраби, романсу...', price: '14 900 ₸', desc: 'Скрининг замедленной непереносимости (IgG) различных видов капусты. Помогает наладить пищеварение и избавиться от скрытого воспаления в кишечнике.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Цукини, патиссон, тыква, авокадо, дайкон, пастернак...', price: '14 900 ₸', desc: 'Анализ иммунной реакции (IgG) на овощные культуры и популярные суперфуды. Точно определяет, какие овощи полезны именно вам, а какие вызывают иммунный сбой.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Базилик, кинза, лук зеленый, лук порей, сельдерей...', price: '14 900 ₸', desc: 'Определение скрытой пищевой непереносимости (IgG) к свежей зелени и пряностям. Позволяет исключить из рациона продукты, перегружающие иммунную систему.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Грейпфрут, лайм, помело, персик, нектарин, манго...', price: '14 900 ₸', desc: 'Тест на замедленную реакцию (IgG) к экзотическим и цитрусовым фруктам. Выявляет скрытые триггеры, провоцирующие аллергические реакции и застой жидкости.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Арбуз, дыня, финики, инжир, айва, папайя, маракуйя...', price: '14 900 ₸', desc: 'Лабораторная оценка иммунного ответа (IgG) на сладкие фрукты и ягоды. Помогает предотвратить скрытые воспаления и наладить углеводный обмен.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Черешня, смородина, земляника, ежевика, голубика...', price: '14 900 ₸', desc: 'Скрининг непереносимости (IgG) к популярным лесным и садовым ягодам. Незаменим для тех, кто ищет причины необъяснимых кожных реакций и проблем с ЖКТ.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Кизил, барбарис, облепиха, крыжовник, фейхоа...', price: '14 900 ₸', desc: 'Анализ на замедленную пищевую реакцию (IgG) к специфическим ягодам и плодам. Дает точное понимание, какие продукты безопасно использовать для витаминизации.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Арахис, миндаль, фисташки, кедровый орех, кешью...', price: '14 900 ₸', desc: 'Глубокая диагностика скрытой непереносимости (IgG) орехов. Позволяет предотвратить хроническое воспаление и подобрать безопасные источники полезных жиров.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Каркадэ, цикорий, матэ, имбирь, кленовый сироп...', price: '14 900 ₸', desc: 'Выявление иммунной реакции (IgG) на популярные напитки и растительные сиропы. Помогает скорректировать привычки для улучшения общего самочувствия.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Цвет липы, шиповник, бессмертник, зверобой...', price: '14 900 ₸', desc: 'Скрининг непереносимости (IgG) к травяным сборам и фиточаям. Важен для тех, кто активно использует травы в рационе, чтобы избежать скрытой нагрузки на печень.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Вино белое/красное/розовое, пиво, артишок...', price: '17 000 ₸', desc: 'Детальный анализ иммунной реакции (IgG) на легкие алкогольные напитки и артишок. Помогает понять причины сильной отечности и плохого самочувствия после их употребления.' },
+            { category: 'allergy', title: 'Пищевая непереносимость: Коньяк, виски, водка, джин, ром, сакэ, граппа, текила', price: '17 000 ₸', desc: 'Лабораторная оценка скрытой непереносимости (IgG) крепких алкогольных напитков. Точно выявляет триггеры, вызывающие мощное системное воспаление и токсическую нагрузку.' },
+
+            // АНЕСТЕТИКИ
+            { category: 'anes', title: 'Артикаин Гидрохлорид 4% (срочный)', price: '9 350 ₸', desc: 'Специальная лабораторная проба на аллергическую реакцию к распространенному стоматологическому анестетику (производство Корея/Испания). Процедура обеспечивает полную безопасность пациента перед хирургическим лечением.' },
+            { category: 'anes', title: 'Лидокаин (срочный)', price: '9 350 ₸', desc: 'Специфическая срочная проба для выявления скрытой индивидуальной гиперчувствительности к популярному раствору лидокаина. Проводится в кратчайшие сроки перед ответственными хирургическими и косметологическими манипуляциями.' },
+            { category: 'anes', title: 'Мепивастезин 3% (срочный)', price: '9 350 ₸', desc: 'Точная лабораторная диагностика аллергической реактивности организма пациента на современный инъекционный анестетик Мепивастезин. Гарантирует абсолютное отсутствие анафилактических реакций и шока в кресле врача.' },
+            { category: 'anes', title: 'Убестезин 4% форте (срочный)', price: '9 350 ₸', desc: 'Предварительная и очень важная проба на переносимость мощного комбинированного анестетика Убестезин форте. Выполняется для стопроцентной уверенности врача и пациента в безопасности предстоящей процедуры.' },
+            { category: 'anes', title: 'Септанест с адреналином (срочный)', price: '9 350 ₸', desc: 'Лабораторный анализ на индивидуальную переносимость современного сильного анестетика Септанест, содержащего в составе адреналин. Исключает нежелательные и опасные реакции сердечно-сосудистой и иммунной систем.' },
+            { category: 'anes', title: 'Ораблок (срочный)', price: '9 350 ₸', desc: 'Надежная лабораторная проба на наличие в крови специфических антител, вызывающих бурную аллергическую реакцию на препарат Ораблок. Сверхбыстрое выполнение анализа позволяет пациенту не откладывать долгожданный визит к специалисту.' }
+        ];
+
+        db.sort((a, b) => a.title.localeCompare(b.title));
+        db.forEach((item, index) => {
+            if(!item.id) item.id = 'srv_' + index;
+        });
+
+        const categories = [
+            { id: 'all', name: 'Все услуги' },
+            { id: 'doctor', name: 'Приемы врачей (Консультации)' },
+            { id: 'iv', name: 'IV-терапия (Капельницы)' },
+            { id: 'proc', name: 'Процедурный кабинет' },
+            { id: 'drugs', name: 'Препараты (Ампулы/Флаконы)' },
+            { id: 'blood_bio', name: 'Биохимия крови' },
+            { id: 'blood_hormones', name: 'Гормоны' },
+            { id: 'pcr', name: 'Инфекции и ПЦР' },
+            { id: 'allergy', name: 'Аллергопробы и Непереносимость' },
+            { id: 'lab_other', name: 'Общеклинические (ОАК, ОАМ, Кал)' },
+            { id: 'anes', name: 'Анестетики (Пробы)' }
+        ];
+
+        const packageData = {
+            'stop-hair': {
+                tag: 'Хит для женщин',
+                title: 'STOP Выпадение',
+                subtitle: 'Комплексное восстановление питания фолликулов',
+                target: 'Женщины после родов, перенесенного COVID-19, периодов сильного стресса или при сезонном/гормональном выпадении волос.',
+                includes: [
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-vial-circle-check text-neo-500 mt-1"></i><div><b class="text-neo-dark">Скрининг микроэлементов для волос:</b> Лабораторный анализ, позволяющий выявить истинную причину дефицита и подобрать точную дозировку.</div></li>',
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-droplet text-neo-500 mt-1"></i><div><b class="text-neo-dark">Капельница NEO BEAUTY:</b> Мгновенная доставка строительного материала к волосяным луковицам. Действует в разы быстрее витаминов из аптеки.</div></li>',
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-gift text-neo-500 mt-1"></i><div><b class="text-neo-dark">Бонус: Инъекция Витамина Д.</b> Базовый элемент для крепкого иммунитета и стимуляции роста новых, плотных волос.</div></li>'
+                ],
+                result: 'Остановка потери волос, пробуждение "спящих" фолликулов, возвращение густоты и здорового блеска. <b>Главный плюс:</b> вы начинаете терапию мгновенно, не дожидаясь результатов анализов, и экономите время.',
+                oldPrice: '95 000 ₸',
+                newPrice: '79 000 ₸',
+                profit: '16 000 ₸'
+            },
+            'energy': {
+                tag: 'Бизнес / Мужчины',
+                title: 'ЭНЕРДЖАЙЗЕР',
+                subtitle: 'Интенсивный курс восстановления работоспособности',
+                target: 'Мужчины, предприниматели, топ-менеджеры и офисные сотрудники с признаками выгорания, синдромом хронической усталости, нарушением сна и апатией.',
+                includes: [
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-droplet text-neo-500 mt-1"></i><div><b class="text-neo-dark">Курс из 3-х капельниц NEO ENERGY:</b> Ударная доза витаминов, аминокислот и антиоксидантов для перезапуска клеточного дыхания и метаболизма.</div></li>',
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-syringe text-neo-500 mt-1"></i><div><b class="text-neo-dark">Поддерживающая терапия:</b> 3 инъекции (Витамин В12 или Гептрал на выбор). Глубокая поддержка нервной системы, печени и улучшение кровоснабжения мозга.</div></li>'
+                ],
+                result: 'Полное восстановление физических и ментальных сил всего за одну неделю. Ясный ум, высокая концентрация, снятие стрессовой нагрузки и возвращение продуктивности <b>без стимуляторов и энергетиков</b>.',
+                oldPrice: '159 000 ₸',
+                newPrice: '130 000 ₸',
+                profit: '29 000 ₸'
+            },
+            'detox': {
+                tag: 'VIP / Биохакинг',
+                title: 'TOTAL DETOX',
+                subtitle: 'Полная перезагрузка организма изнутри',
+                target: 'Биохакеры, люди с проблемной кожей (акне, высыпания), неясными аллергиями, застоем лишнего веса и проблемами пищеварения.',
+                includes: [
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-vial text-neo-500 mt-1"></i><div><b class="text-neo-dark">Тест на пищевую непереносимость (Основная группа):</b> Глубокий скрининг скрытых воспалений на продукты питания. Находим то, что разрушает ваш организм годами.</div></li>',
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-microscope text-neo-500 mt-1"></i><div><b class="text-neo-dark">Анализ микробиома (ХМС по Осипову):</b> "Золотой стандарт" оценки состояния кишечника. Показывает все нарушения флоры и скрытые инфекции.</div></li>',
+                    '<li class="flex items-start gap-3"><i class="fa-solid fa-droplet text-neo-500 mt-1"></i><div><b class="text-neo-dark">Капельница NEO DETOX:</b> Мощный старт процесса очищения организма на клеточном уровне, выведение токсинов и снятие отеков.</div></li>'
+                ],
+                result: 'Медицинское решение проблемы "под ключ". Выявление продуктов, вызывающих скрытое воспаление, очищение крови и нормализация работы печени. <b>Результат:</b> чистая кожа, естественное снижение веса и новое качество жизни.',
+                oldPrice: '215 000 ₸',
+                newPrice: '185 000 ₸',
+                profit: '30 000 ₸'
+            }
+        };
+
+        const legalTexts = {
+            'about': {
+                title: 'О клинике NeoLab',
+                text: `
+                    <div class="space-y-4">
+                        <div class="bg-neo-50 p-6 rounded-2xl border border-neo-100 mb-6">
+                            <h4 class="font-bold text-neo-dark text-lg mb-2">Laboratory Miruyert Bektenova</h4>
+                            <p class="text-sm leading-relaxed text-neo-900">Это премиальный центр IV-терапии, превентивной медицины и высокоточной лабораторной диагностики в г. Астана. Мы объединяем передовые медицинские протоколы и концепцию биохакинга для восстановления вашего здоровья на клеточном уровне.</p>
+                        </div>
+                        <h4 class="font-bold text-neo-dark text-base flex items-center gap-2"><i class="fa-solid fa-bullseye text-neo-500"></i> Наша миссия</h4>
+                        <p>Мы убеждены, что современная медицина должна не просто "тушить" симптомы таблетками, а находить и устранять первопричины дисбаланса в организме. Наша цель — подарить вам совершенно новое качество жизни, где нет места хронической усталости, выгоранию и преждевременному старению.</p>
+                        
+                        <h4 class="font-bold text-neo-dark text-base flex items-center gap-2 pt-4"><i class="fa-solid fa-flask text-neo-500"></i> Индивидуальный подход</h4>
+                        <p>Мы не используем шаблонные решения. Каждая программа капельниц (IV-терапии) в NeoLab составляется индивидуально, строго на основе результатов вашей расширенной лабораторной диагностики. Это позволяет нам со снайперской точностью восполнять дефициты витаминов и минералов, возвращая вам энергию, молодость и ясный ум.</p>
+                    </div>
+                `
+            },
+            'patients': {
+                title: 'Информация для пациентов',
+                text: `
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="font-bold text-neo-dark text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-vial text-neo-500"></i> Подготовка к сдаче анализов</h4>
+                            <ul class="list-disc pl-5 space-y-1.5 text-sm">
+                                <li>Кровь сдается <b>строго натощак</b> (8-12 часов после последнего приема пищи).</li>
+                                <li>Чистую негазированную воду пить можно и нужно (1-2 стакана утром улучшат забор крови).</li>
+                                <li>За 24 часа до визита исключите алкоголь, жирную пищу и интенсивные физические нагрузки.</li>
+                                <li>Прием лекарственных препаратов согласуйте с лечащим врачом или предупредите медсестру.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-neo-50 p-5 rounded-2xl border border-neo-100">
+                            <h4 class="font-bold text-neo-dark text-base mb-2 flex items-center gap-2"><i class="fa-solid fa-bed-pulse text-neo-500"></i> Подготовка к IV-терапии (капельницам)</h4>
+                            <ul class="list-disc pl-5 space-y-1.5 text-sm">
+                                <li>В отличие от анализов, капельницы <b class="text-neo-600">категорически нельзя ставить натощак</b>. Обязательно сделайте легкий перекус за 1-2 часа до процедуры.</li>
+                                <li>При первом визите при себе необходимо иметь удостоверение личности.</li>
+                                <li>Перед назначением рецептурных витаминных составов необходима консультация специалиста.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-8 bg-slate-100 p-6 md:p-8 rounded-3xl border border-slate-200 shadow-inner">
+                            <div class="flex flex-col md:flex-row items-center gap-4">
+                                <div class="bg-white w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-3xl text-green-500"></i>
+                                </div>
+                                <div class="flex-1 text-center md:text-left">
+                                    <h4 class="font-bold text-neo-dark text-lg mb-1">Получить памятку на телефон</h4>
+                                    <p class="text-xs text-slate-500">Введите номер WhatsApp, и мы моментально пришлем вам подробные правила подготовки в удобном PDF-формате.</p>
+                                </div>
+                            </div>
+                            <div id="memoForm" class="flex flex-col sm:flex-row gap-3 mt-5">
+                                <input type="tel" id="memoPhone" placeholder="8 (___) ___-__-__" class="flex-1 px-5 py-3.5 rounded-xl border border-slate-300 text-sm font-medium focus:ring-2 focus:ring-neo-500 outline-none transition">
+                                <button onclick="sendMemo()" class="bg-neo-500 text-white px-8 py-3.5 rounded-xl text-sm font-bold hover:bg-neo-600 transition shadow-md whitespace-nowrap">
+                                    Отправить PDF
+                                </button>
+                            </div>
+                            <div id="memoSuccess" class="hidden mt-4 p-4 bg-green-50 rounded-xl border border-green-200 text-sm font-bold text-green-600 flex items-center justify-center gap-2 transition-all">
+                                <i class="fa-solid fa-circle-check text-lg"></i> Памятка успешно отправлена на ваш номер!
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'doctors': {
+                title: 'Сотрудничество для врачей',
+                text: `
+                    <div class="space-y-6">
+                        <p class="text-sm"><b>NeoLab</b> приглашает к сотрудничеству превентивных врачей, нутрициологов, эндокринологов, гинекологов и косметологов. Мы создали идеальную инфраструктуру для реализации ваших медицинских стратегий.</p>
+                        
+                        <div>
+                            <h4 class="font-bold text-neo-dark text-base mb-4">Ваши выгоды от партнерства:</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-neo-500 transition group">
+                                    <i class="fa-solid fa-vial-circle-check text-neo-100 text-3xl mb-3 group-hover:text-neo-500 transition"></i>
+                                    <div class="font-bold text-neo-dark text-sm mb-2">Широкая диагностика</div>
+                                    <div class="text-xs text-slate-500 leading-relaxed">Доступ к сложным анализам: ХМС по Осипову, тесты на пищевую непереносимость, дефициты микроэлементов и генетика.</div>
+                                </div>
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-neo-500 transition group">
+                                    <i class="fa-solid fa-hand-holding-medical text-neo-100 text-3xl mb-3 group-hover:text-neo-500 transition"></i>
+                                    <div class="font-bold text-neo-dark text-sm mb-2">Реализация назначений</div>
+                                    <div class="text-xs text-slate-500 leading-relaxed">Ваш пациент приходит к нам с вашим бланком — мы профессионально и безопасно ставим назначенную вами IV-терапию.</div>
+                                </div>
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-neo-500 transition group">
+                                    <i class="fa-solid fa-user-shield text-neo-100 text-3xl mb-3 group-hover:text-neo-500 transition"></i>
+                                    <div class="font-bold text-neo-dark text-sm mb-2">Врачебная этика</div>
+                                    <div class="text-xs text-slate-500 leading-relaxed">Мы строго соблюдаем субординацию. Мы не "лечим" и не перехватываем ваших пациентов, а являемся надежным инструментом для вашего протокола лечения.</div>
+                                </div>
+                                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-neo-500 transition group">
+                                    <i class="fa-solid fa-handshake-angle text-neo-100 text-3xl mb-3 group-hover:text-neo-500 transition"></i>
+                                    <div class="font-bold text-neo-dark text-sm mb-2">Программа лояльности</div>
+                                    <div class="text-xs text-slate-500 leading-relaxed">Прозрачная, честная и щедрая система партнерского вознаграждения за направленных пациентов.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-neo-900 text-white p-6 md:p-8 rounded-3xl text-center mt-4 relative overflow-hidden">
+                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-neo-600 rounded-full blur-2xl opacity-50"></div>
+                            <h4 class="font-bold text-xl mb-2 relative z-10">Хотите стать нашим партнером?</h4>
+                            <p class="text-sm text-neo-100 mb-6 relative z-10 max-w-md mx-auto">Свяжитесь с руководством клиники для получения подробной B2B-презентации и прайс-листа для врачей.</p>
+                            <a href="https://wa.me/77009257292" target="_blank" class="relative z-10 inline-block bg-neo-500 hover:bg-white hover:text-neo-900 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition shadow-lg"><i class="fa-brands fa-whatsapp mr-1 text-lg"></i> Написать руководству</a>
+                        </div>
+                    </div>
+                `
+            },
+            'privacy': {
+                title: 'Политика конфиденциальности',
+                text: `<p><b>1. Общие положения</b><br>Настоящая политика конфиденциальности составлена в соответствии с требованиями Закона Республики Казахстан «О персональных данных и их защите» и определяет порядок обработки персональных данных и меры по обеспечению безопасности персональных данных, предпринимаемые клиникой NeoLab.</p>
+                       <p><b>2. Какие данные мы собираем</b><br>Оператор может обрабатывать следующие персональные данные Пользователя: Фамилия, имя; Номер телефона; Информация, добровольно предоставленная пациентом в рамках использования сайта.</p>`
+            },
+            'consent': {
+                title: 'Согласие на обработку данных',
+                text: `<p>Оставляя заявку на интернет-сайте NeoLab, Пользователь дает свое согласие на обработку своих персональных данных для связи с ним, предварительного расчета стоимости услуг и записи на прием, как без использования средств автоматизации, так и с их использованием.</p>`
+            },
+            'offer': {
+                title: 'Публичная оферта',
+                text: `<p><b>Внимание:</b> Цены, указанные в "Предварительном расчете" на сайте, носят исключительно ознакомительный характер и не являются публичной офертой. Точная стоимость услуг фиксируется администратором клиники после уточнения деталей и подтверждения записи.</p>
+                       <p>Медицинские услуги имеют противопоказания. Перед процедурами может потребоваться консультация специалиста.</p>`
+            },
+            'agreement': {
+                title: 'Пользовательское соглашение',
+                text: `<p>Материалы сайта носят справочный характер и не могут заменить очную консультацию врача. Администрация сайта не несет ответственности за любые прямые или косвенные убытки, возникшие в результате использования информации с сайта для самолечения.</p>`
+            }
+        };
+
+        let currentCategory = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderServices(db);
+        });
+
+        // ==================== ЛОГИКА "ПЛАНА ВИЗИТА" ====================
+
+        function togglePlanItem(id, type = 'service', eventObj = null) {
+            if(eventObj) eventObj.stopPropagation();
+
+            let itemToAdd;
+            if (type === 'package') {
+                const pkg = packageData[id];
+                itemToAdd = { id: id, title: `Комплекс «${pkg.title}»`, price: pkg.newPrice, type: 'package' };
+            } else {
+                const srv = db.find(s => s.id === id);
+                itemToAdd = { id: id, title: srv.title, price: srv.price, type: 'service' };
+            }
+
+            const existingIndex = visitPlan.findIndex(i => i.id === id);
+            
+            if (existingIndex > -1) {
+                visitPlan.splice(existingIndex, 1);
+            } else {
+                visitPlan.push(itemToAdd);
+            }
+            
+            updatePlanWidget();
+            updateButtonsState();
+        }
+
+        function updatePlanWidget() {
+            const widget = document.getElementById('planWidget');
+            if (visitPlan.length > 0) {
+                let total = visitPlan.reduce((sum, item) => sum + parsePrice(item.price), 0);
+                document.getElementById('planCount').innerText = visitPlan.length;
+                document.getElementById('planTotal').innerText = formatPrice(total);
+                widget.classList.remove('translate-y-32', 'opacity-0');
+            } else {
+                widget.classList.add('translate-y-32', 'opacity-0');
+                closePlanModal();
+            }
+        }
+
+        function updateButtonsState() {
+            renderServices(db.filter(item => {
+                if (currentCategory === 'search') return true;
+                return currentCategory === 'all' ? true : item.category === currentCategory;
+            }));
+
+            // Обновляем все кнопки в промовитрине
+            ['stop-hair', 'energy', 'detox', 'parasep', 'hms', 'food_intol', 'hair_micro'].forEach(pkgId => {
+                const btn = document.getElementById(`btn_${pkgId}`);
+                if (btn) {
+                    if (visitPlan.find(i => i.id === pkgId)) {
+                        btn.innerHTML = `<span class="group-hover/btn:hidden"><i class="fa-solid fa-check mr-1"></i> В расчете</span><span class="hidden group-hover/btn:inline"><i class="fa-solid fa-xmark mr-1"></i> Убрать</span>`;
+                        btn.className = "group/btn shrink-0 bg-white hover:bg-red-500 hover:text-white text-neo-900 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-transparent active:scale-95";
+                    } else {
+                        btn.innerHTML = `<i class="fa-solid fa-plus mr-1"></i> В расчет`;
+                        btn.className = "group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95";
+                    }
+                }
+            });
+
+            const currentPkgId = document.getElementById('pkgIdStorage') ? document.getElementById('pkgIdStorage').value : null;
+            if (currentPkgId) {
+                const modalBtn = document.getElementById('pkgAddBtn');
+                if(modalBtn) {
+                    if (visitPlan.find(i => i.id === currentPkgId)) {
+                        modalBtn.innerHTML = `<span class="group-hover/btn:hidden"><i class="fa-solid fa-check mr-2"></i> В плане визита</span><span class="hidden group-hover/btn:inline"><i class="fa-solid fa-xmark mr-2"></i> Удалить из расчета</span>`;
+                        modalBtn.className = "group/btn w-full bg-slate-800 hover:bg-red-500 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition shadow-lg transform hover:-translate-y-0.5 mb-2";
+                    } else {
+                        modalBtn.innerHTML = `<i class="fa-solid fa-plus mr-2"></i> Добавить в расчет`;
+                        modalBtn.className = "group/btn w-full bg-neo-500 hover:bg-neo-600 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition shadow-lg shadow-neo-500/30 transform hover:-translate-y-0.5 mb-2";
+                    }
+                }
+            }
+        }
+
+        function openPlanModal() {
+            if (visitPlan.length === 0) return;
+            renderPlanItems();
+            const modal = document.getElementById('planModal');
+            const content = document.getElementById('planModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closePlanModal() {
+            const modal = document.getElementById('planModal');
+            const content = document.getElementById('planModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function renderPlanItems() {
+            const list = document.getElementById('planItemsList');
+            let total = 0;
+            
+            list.innerHTML = visitPlan.map(item => {
+                total += parsePrice(item.price);
+                return `
+                <div class="bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm">
+                    <div class="pr-4">
+                        <div class="text-sm font-bold text-neo-dark leading-snug">${item.title}</div>
+                        <div class="text-xs text-slate-500 mt-1">${item.price}</div>
+                    </div>
+                    <button onclick="togglePlanItem('${item.id}', '${item.type}')" class="w-8 h-8 rounded-full bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 transition flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+            `}).join('');
+
+            document.getElementById('planModalTotal').innerText = formatPrice(total);
+        }
+
+        function submitOrder() {
+            const name = document.getElementById('orderName').value.trim();
+            const phone = document.getElementById('orderPhone').value.trim();
+            const branch = document.querySelector('input[name="orderBranch"]:checked').value;
+
+            if (!name || !phone) {
+                alert('Пожалуйста, укажите ваше имя и телефон, чтобы администратор мог связаться с вами.');
+                return;
+            }
+
+            let text = `Здравствуйте! Меня зовут ${name}.\nЯ хочу записаться на следующие услуги (предварительный расчет с сайта):\n\n`;
+            
+            visitPlan.forEach((item, i) => {
+                text += `${i+1}. ${item.title} - ${item.price}\n`;
+            });
+            
+            let total = visitPlan.reduce((sum, item) => sum + parsePrice(item.price), 0);
+            text += `\n*Итого ориентировочно:* ${formatPrice(total)}\n`;
+            text += `Удобный филиал: ${branch === 'tolebi' ? 'Толе би, 61' : 'Аль-Фараби, 29'}`;
+
+            const phoneNum = branch === 'tolebi' ? '77774000804' : '77009257292';
+            const url = `https://wa.me/${phoneNum}?text=${encodeURIComponent(text)}`;
+            
+            window.open(url, '_blank');
+        }
+
+        // ==================== РЕНДЕР КАТАЛОГА ====================
+        
+        function renderCategories() {
+            const list = document.getElementById('categoryList');
+            list.innerHTML = categories.map(cat => `
+                <li>
+                    <a href="#" 
+                       onclick="setCategory('${cat.id}', event)" 
+                       class="category-link block px-5 py-3.5 text-slate-700 hover:bg-neo-50 hover:text-neo-600 border-b border-slate-100 transition text-[13px] leading-snug ${cat.id === currentCategory ? 'active' : ''}">
+                       ${cat.name}
+                    </a>
+                </li>
+            `).join('');
+        }
+
+        function setCategory(categoryId, event) {
+            if(event) event.preventDefault();
+            currentCategory = categoryId;
+            
+            const catObj = categories.find(c => c.id === categoryId);
+            document.getElementById('currentCategoryTitle').innerText = catObj.name;
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+
+            const promo = document.getElementById('promoBlocks');
+            if(promo) promo.style.display = '';
+
+            let filtered = db;
+            if (categoryId !== 'all') {
+                filtered = db.filter(item => item.category === categoryId);
+            }
+
+            renderCategories();
+            renderServices(filtered);
+        }
+
+        function filterServices(isMobile = false) {
+            const query = document.getElementById(isMobile ? 'searchInputMobile' : 'searchInput').value.trim().toLowerCase();
+            
+            if (isMobile) document.getElementById('searchInput').value = query;
+            else document.getElementById('searchInputMobile').value = query;
+
+            const promo = document.getElementById('promoBlocks');
+            const catalog = document.getElementById('catalogSection');
+            
+            if (query.length > 0) {
+                currentCategory = 'search';
+                document.getElementById('currentCategoryTitle').innerText = 'Результаты поиска';
+                document.querySelectorAll('.category-link').forEach(link => link.classList.remove('active'));
+                
+                if(promo) promo.style.display = 'none';
+
+                if(catalog && window.scrollY < catalog.offsetTop - 150 && !isMobile) {
+                    window.scrollTo({ top: catalog.offsetTop - 100, behavior: 'smooth' });
+                }
+            } else {
+                setCategory('all');
+                return;
+            }
+
+            const filtered = db.filter(item => {
+                const inTitle = item.title.toLowerCase().includes(query);
+                const inDesc = item.desc && item.desc.toLowerCase().includes(query);
+                const catObj = categories.find(c => c.id === item.category);
+                const inCat = catObj && catObj.name.toLowerCase().includes(query);
+                return inTitle || inDesc || inCat;
+            });
+            renderServices(filtered);
+        }
+
+        let renderTimeout;
+        function renderServices(services) {
+            const grid = document.getElementById('servicesGrid');
+            document.getElementById('servicesCount').innerText = `Найдено: ${services.length}`;
+
+            grid.style.opacity = 0;
+            clearTimeout(renderTimeout);
+            
+            renderTimeout = setTimeout(() => {
+                if (services.length === 0) {
+                    grid.innerHTML = `
+                        <div class="bg-white p-12 rounded-2xl border border-slate-200 text-center text-slate-500 shadow-sm animate-fade-in-up">
+                            <i class="fa-solid fa-flask text-5xl text-neo-100 mb-4"></i>
+                            <p class="text-lg">Услуг по вашему запросу не найдено.</p>
+                            <button onclick="setCategory('all', event)" class="mt-4 text-neo-500 font-bold hover:underline">Показать весь прайс</button>
+                        </div>
+                    `;
+                } else {
+                    grid.innerHTML = services.map((item, index) => {
+                        const inPlan = visitPlan.find(i => i.id === item.id);
+                        const descText = item.desc ? item.desc : 'Лабораторное исследование для точной оценки данного показателя в организме.';
+                        const safeDesc = descText.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                        const safeTitle = item.title.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                        const animationDelay = index < 10 ? `style="animation-delay: ${index * 50}ms;"` : '';
+
+                        // Умная кнопка удаления
+                        const btnClass = inPlan 
+                            ? 'group/btn bg-slate-800 hover:bg-red-500 hover:text-white text-white border-transparent' 
+                            : 'group/btn bg-neo-50 hover:bg-neo-500 text-neo-600 hover:text-white border-neo-100 hover:border-neo-500';
+                            
+                        const btnContent = inPlan 
+                            ? '<span class="group-hover/btn:hidden"><i class="fa-solid fa-check mr-1"></i> В плане</span><span class="hidden group-hover/btn:inline"><i class="fa-solid fa-xmark mr-1"></i> Убрать</span>' 
+                            : '<i class="fa-solid fa-plus mr-1"></i> Добавить';
+
+                        return `
+                        <div ${animationDelay} class="service-card animate-fade-in-up opacity-0 bg-white p-4 md:p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row gap-4 justify-between group ${inPlan ? 'ring-2 ring-neo-500 bg-neo-50/30' : ''}">
+                            <div class="flex-1">
+                                <h3 class="text-base font-bold text-neo-dark mb-1 group-hover:text-neo-600 transition leading-snug">${item.title}</h3>
+                                <button onclick="openServiceInfoModal('${safeTitle}', '${safeDesc}')" class="text-[11px] text-neo-500 hover:text-neo-600 underline decoration-dashed underline-offset-2 mb-2 inline-block transition-colors">Посмотреть описание</button>
+                            </div>
+                            
+                            <div class="flex flex-row md:flex-col items-center justify-between md:justify-center shrink-0 min-w-[150px] border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-5">
+                                <div class="font-bold text-lg text-neo-dark mb-0 md:mb-2 transition-colors group-hover:text-neo-600">${item.price}</div>
+                                <button onclick="togglePlanItem('${item.id}', 'service')" class="${btnClass} px-4 py-2 rounded-xl text-xs font-bold transition-all w-auto md:w-full border shadow-sm active:scale-95">
+                                    ${btnContent}
+                                </button>
+                            </div>
+                        </div>
+                    `}).join('');
+                }
+                grid.style.opacity = 1;
+            }, 100);
+        }
+
+        // ==================== МОДАЛКИ ====================
+
+        function openServiceInfoModal(title, desc) {
+            document.getElementById('serviceInfoTitle').innerText = title;
+            document.getElementById('serviceInfoDesc').innerHTML = desc;
+            
+            const modal = document.getElementById('serviceInfoModal');
+            const content = document.getElementById('serviceInfoModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeServiceInfoModal() {
+            const modal = document.getElementById('serviceInfoModal');
+            const content = document.getElementById('serviceInfoModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function openBranchModal() {
+            const modal = document.getElementById('branchModal');
+            const content = document.getElementById('branchModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeBranchModal() {
+            const modal = document.getElementById('branchModal');
+            const content = document.getElementById('branchModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function openPackageModal(id) {
+            const data = packageData[id];
+            if (!data) return;
+
+            document.getElementById('pkgTag').innerText = data.tag;
+            document.getElementById('pkgTitle').innerText = data.title;
+            document.getElementById('pkgSubtitle').innerText = data.subtitle;
+            document.getElementById('pkgTarget').innerText = data.target;
+            document.getElementById('pkgIncludes').innerHTML = data.includes.join('');
+            document.getElementById('pkgResult').innerHTML = data.result;
+            document.getElementById('pkgOldPrice').innerText = data.oldPrice;
+            document.getElementById('pkgPrice').innerText = data.newPrice;
+            document.getElementById('pkgProfit').innerText = `Выгода ${data.profit}`;
+            document.getElementById('pkgIdStorage').value = id;
+
+            const modal = document.getElementById('packageModal');
+            const content = document.getElementById('packageModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+                updateButtonsState();
+            }, 10);
+        }
+
+        function togglePackageFromModal() {
+            const id = document.getElementById('pkgIdStorage').value;
+            togglePlanItem(id, 'package');
+        }
+
+        function closePackageModal() {
+            const modal = document.getElementById('packageModal');
+            const content = document.getElementById('packageModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function openLegalModal(docType) {
+            const data = legalTexts[docType];
+            if (!data) return;
+
+            document.getElementById('legalTitle').innerText = data.title;
+            document.getElementById('legalText').innerHTML = data.text;
+
+            const modal = document.getElementById('legalModal');
+            const content = document.getElementById('legalModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            const content = document.getElementById('legalModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function sendMemo() {
+            const phoneInput = document.getElementById('memoPhone');
+            const formDiv = document.getElementById('memoForm');
+            const successDiv = document.getElementById('memoSuccess');
+            
+            if(phoneInput.value.length < 5) {
+                alert('Пожалуйста, введите корректный номер телефона');
+                return;
+            }
+
+            const btn = formDiv.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Отправляем...';
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            
+            setTimeout(() => {
+                formDiv.classList.add('hidden');
+                successDiv.classList.remove('hidden');
+                setTimeout(() => {
+                    phoneInput.value = '';
+                    formDiv.classList.remove('hidden');
+                    successDiv.classList.add('hidden');
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }, 5000);
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
