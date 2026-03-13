@@ -259,6 +259,32 @@
             </div>
         </div>
 
+        <!-- БЛОК ГИПОКСИТЕРАПИЯ -->
+        <div class="container mx-auto px-4 lg:px-8 max-w-7xl mb-16 reveal-on-scroll">
+            <div class="bg-blue-900 rounded-3xl p-8 md:p-10 shadow-lg relative overflow-hidden flex flex-col md:flex-row items-center justify-between group/card hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 border border-blue-800 cursor-pointer" onclick="openHypoxyModal()">
+                <div class="absolute inset-0 z-0 opacity-40 group-hover/card:opacity-50 group-hover/card:scale-105 transition-all duration-700 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1517685352821-92cf88aee5b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); mix-blend-mode: luminosity;"></div>
+                <div class="absolute inset-0 z-0 bg-gradient-to-r from-blue-900 via-blue-900/90 to-blue-900/40"></div>
+                
+                <div class="z-10 w-full md:w-2/3 pr-0 md:pr-8 mb-6 md:mb-0">
+                    <span class="bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm mb-4 inline-block">Инновация</span>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-2 group-hover/card:text-blue-200 transition-colors">Гипокситерапия</h3>
+                    <div class="text-blue-200 font-medium mb-4 text-sm md:text-base">Дыхательная тренировка на клеточном уровне</div>
+                    <p class="text-white/80 text-sm leading-relaxed max-w-xl">Уникальный метод гипокси-гиперокси терапии. Организм учится работать эффективнее: запускаются резервные механизмы, улучшается работа митохондрий, повышается выносливость и снижается стресс.</p>
+                </div>
+                
+                <div class="z-10 w-full md:w-auto shrink-0 flex flex-col items-start md:items-end">
+                    <div class="text-blue-200 text-xs mb-1 uppercase tracking-wider font-bold">Стоимость</div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-sm text-slate-300">от</span>
+                        <span class="text-4xl font-bold text-white">10 000 ₸</span>
+                    </div>
+                    <button class="bg-blue-500 hover:bg-blue-400 text-white px-8 py-3.5 rounded-xl text-sm font-bold transition-all shadow-lg active:scale-95 w-full md:w-auto text-center border border-blue-400">
+                        Подробнее и цены
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- БЛОК ПРОДАЖИ ПАКЕТОВ (С ПРЕМИАЛЬНЫМИ ФОНАМИ) -->
         <div class="container mx-auto px-4 lg:px-8 max-w-7xl mb-16 reveal-on-scroll">
             <div class="flex items-end justify-between mb-8">
@@ -492,6 +518,76 @@
         </div>
     </div>
 
+    <!-- Модальное окно ГИПОКСИТЕРАПИИ -->
+    <div id="hypoxyModal" class="fixed inset-0 bg-neo-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="hypoxyModalContent">
+            <div class="p-6 md:p-8 bg-blue-900 text-white relative shrink-0">
+                <button onclick="closeHypoxyModal()" class="absolute top-4 right-6 text-white/60 hover:text-white transition"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                <div class="text-[10px] bg-white/20 text-white px-3 py-1 rounded-full uppercase tracking-widest font-bold inline-block mb-3">Инновация</div>
+                <h3 class="text-3xl font-bold mb-2">Гипокситерапия</h3>
+                <p class="text-blue-100 text-sm">Гипокси-гиперокси тренировка организма</p>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto flex-1 bg-slate-50 text-slate-700 text-sm leading-relaxed space-y-5">
+                <p><b>Гипокси-гиперокси тренировка</b> - это метод дыхательной терапии, когда организм поочередно дышит воздухом с пониженным и повышенным содержанием кислорода. Простыми словами, мы как будто на короткое время “поднимаемся в горы”, а потом возвращаемся на обычный воздух.</p>
+                
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-neo-dark text-base mb-2">Зачем это нужно?</h4>
+                    <p class="mb-4">Когда организм получает меньше кислорода, он начинает включать свои резервные механизмы. Клетки учатся работать эффективнее, особенно митохондрии - наши маленькие энергетические станции.</p>
+                    <p class="font-bold text-neo-dark mb-3">Поэтому такие тренировки помогают:</p>
+                    <ul class="space-y-2.5 pl-2">
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-bolt text-blue-500 mt-0.5"></i> <span><b>1.</b> улучшить работу митохондрий и выработку энергии</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-person-running text-blue-500 mt-0.5"></i> <span><b>2.</b> повысить выносливость и восстановление организма</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-heart-pulse text-blue-500 mt-0.5"></i> <span><b>3.</b> улучшить кровообращение и насыщение тканей кислородом</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-brain text-blue-500 mt-0.5"></i> <span><b>4.</b> поддержать мозг, память и концентрацию</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-shield-halved text-blue-500 mt-0.5"></i> <span><b>5.</b> укрепить иммунитет</span></li>
+                        <li class="flex items-start gap-3"><i class="fa-solid fa-bed text-blue-500 mt-0.5"></i> <span><b>6.</b> снизить усталость и стресс</span></li>
+                    </ul>
+                </div>
+
+                <p class="bg-blue-50 p-4 rounded-xl text-blue-900 border border-blue-100 italic font-medium text-center">Это своего рода тренировка для организма, только не мышц, а клеток и дыхательной системы.</p>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-neo-dark text-base mb-3">Особенно полезно:</h4>
+                    <ul class="space-y-2 pl-5 list-disc marker:text-blue-500 font-medium">
+                        <li>детям для развития и энергии</li>
+                        <li>спортсменам для выносливости</li>
+                        <li>беременным для лучшего насыщения кислородом</li>
+                        <li>людям, живущим в городе с плохой экологией</li>
+                        <li>при хронической усталости</li>
+                    </ul>
+                </div>
+
+                <p class="text-[13px] text-slate-500">Процедура проходит спокойно: человек просто дышит через специальную маску, а аппарат автоматически меняет состав воздуха.</p>
+                <p class="font-bold text-neo-dark text-base bg-white p-4 border-l-4 border-blue-500 rounded-r-xl shadow-sm">Если сказать совсем просто, мы учим организм лучше использовать кислород и включать его внутренние ресурсы.</p>
+            </div>
+            
+            <div class="p-6 border-t border-slate-200 bg-white shrink-0">
+                <h4 class="font-bold text-neo-dark mb-4 text-center">Выберите курс:</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <!-- Option 1 -->
+                    <div class="border border-slate-200 rounded-xl p-4 text-center flex flex-col justify-between hover:border-blue-300 transition-colors">
+                        <div class="font-bold text-neo-dark mb-1">1 процедура</div>
+                        <div class="text-xl font-extrabold text-blue-600 mb-3">10 000 ₸</div>
+                        <button onclick="togglePlanItem('hypoxy_1', 'service')" id="btn_hypoxy_1" class="group/btn w-full bg-slate-100 hover:bg-blue-500 text-slate-700 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-all">В расчет</button>
+                    </div>
+                    <!-- Option 5 -->
+                    <div class="border-2 border-blue-400 bg-blue-50/50 rounded-xl p-4 text-center flex flex-col justify-between relative shadow-sm hover:border-blue-500 transition-colors">
+                        <div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-[9px] font-bold px-3 py-0.5 rounded-full uppercase tracking-wider">Популярно</div>
+                        <div class="font-bold text-neo-dark mb-1">5 процедур</div>
+                        <div class="text-xl font-extrabold text-blue-600 mb-3">47 000 ₸</div>
+                        <button onclick="togglePlanItem('hypoxy_5', 'service')" id="btn_hypoxy_5" class="group/btn w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm">В расчет</button>
+                    </div>
+                    <!-- Option 10 -->
+                    <div class="border border-slate-200 rounded-xl p-4 text-center flex flex-col justify-between hover:border-blue-300 transition-colors">
+                        <div class="font-bold text-neo-dark mb-1">10 процедур</div>
+                        <div class="text-xl font-extrabold text-blue-600 mb-3">95 000 ₸</div>
+                        <button onclick="togglePlanItem('hypoxy_10', 'service')" id="btn_hypoxy_10" class="group/btn w-full bg-slate-100 hover:bg-blue-500 text-slate-700 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-all">В расчет</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Модальное окно ОПИСАНИЯ ПАКЕТА -->
     <div id="packageModal" class="fixed inset-0 bg-neo-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="packageModalContent">
@@ -680,6 +776,11 @@
             { category: 'proc', title: 'Озонтерапия (Озон) 1 процедура', price: '8 500 ₸', desc: 'Насыщение крови активным кислородом для мощного и естественного поднятия иммунитета. Процедура дает мгновенный заряд энергии и улучшает микроциркуляцию тканей.' },
             { category: 'proc', title: 'Озон 5 процедур', price: '38 000 ₸', desc: 'Мини-курс озонотерапии для закрепления стойкого лечебного эффекта. Выгодное предложение для тех, кто хочет восстановить силы и защитить организм от инфекций.' },
             { category: 'proc', title: 'Озон 10 процедур', price: '74 000 ₸', desc: 'Полноценный курс озонотерапии для глубокого и комплексного оздоровления организма. Максимальная выгода и превосходный результат в лечении хронической усталости.' },
+            
+            // ГИПОКСИТЕРАПИЯ
+            { id: 'hypoxy_1', category: 'proc', title: 'Гипокситерапия (1 процедура)', price: '10 000 ₸', desc: 'Метод дыхательной терапии, когда организм поочередно дышит воздухом с пониженным и повышенным содержанием кислорода. Клетки учатся работать эффективнее, улучшается работа митохондрий, выносливость и кровообращение.' },
+            { id: 'hypoxy_5', category: 'proc', title: 'Гипокситерапия (5 процедур)', price: '47 000 ₸', desc: 'Курс дыхательной тренировки клеток для глубокого восстановления организма. Помогает снизить усталость, укрепить иммунитет и поддержать мозг.' },
+            { id: 'hypoxy_10', category: 'proc', title: 'Гипокситерапия (10 процедур)', price: '95 000 ₸', desc: 'Полный курс гипокси-гиперокси терапии для максимального и долгосрочного эффекта. Организм учится лучше использовать кислород и включать внутренние резервы.' },
 
             // IV ТЕРАПИЯ
             { category: 'iv', title: 'NEO BEAUTY', price: '42 000 ₸', desc: 'Авторская капельница для сияния кожи, глубокого увлажнения изнутри и мощного anti-age эффекта. Насыщает клетки антиоксидантами, возвращая молодость и упругость тканей.' },
@@ -910,11 +1011,11 @@
                 text: `
                     <div class="space-y-4">
                         <div class="bg-neo-50 p-6 rounded-2xl border border-neo-100 mb-6">
-                            <h4 class="font-bold text-neo-dark text-lg mb-2">Laboratory Miruyert Bektenova</h4>
-                            <p class="text-sm leading-relaxed text-neo-900">Это премиальный центр IV-терапии, превентивной медицины и высокоточной лабораторной диагностики в г. Астана. Мы объединяем передовые медицинские протоколы и концепцию биохакинга для восстановления вашего здоровья на клеточном уровне.</p>
+                            <h4 class="font-bold text-neo-dark text-lg mb-2">Мируерт Бектенова</h4>
+                            <p class="text-sm leading-relaxed text-neo-900">Основатель и руководитель лаборатории NeoLab. Создала пространство современной диагностики, где анализы это не цифры, а инструмент для понимания здоровья.</p>
                         </div>
                         <h4 class="font-bold text-neo-dark text-base flex items-center gap-2"><i class="fa-solid fa-bullseye text-neo-500"></i> Наша миссия</h4>
-                        <p>Мы убеждены, что современная медицина должна не просто "тушить" симптомы таблетками, а находить и устранять первопричины дисбаланса в организме. Наша цель — подарить вам совершенно новое качество жизни, где нет места хронической усталости, выгоранию и преждевременному старению.</p>
+                        <p>Делать медицину точной, понятной и доступной, чтобы каждый человек мог вовремя услышать свой организм и сохранить качество жизни.</p>
                         
                         <h4 class="font-bold text-neo-dark text-base flex items-center gap-2 pt-4"><i class="fa-solid fa-flask text-neo-500"></i> Индивидуальный подход</h4>
                         <p>Мы не используем шаблонные решения. Каждая программа капельниц (IV-терапии) в NeoLab составляется индивидуально, строго на основе результатов вашей расширенной лабораторной диагностики. Это позволяет нам со снайперской точностью восполнять дефициты витаминов и минералов, возвращая вам энергию, молодость и ясный ум.</p>
@@ -1089,6 +1190,24 @@
                     } else {
                         btn.innerHTML = `<i class="fa-solid fa-plus mr-1"></i> В расчет`;
                         btn.className = "group/btn shrink-0 bg-white/20 hover:bg-neo-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm border border-white/30 backdrop-blur-sm active:scale-95";
+                    }
+                }
+            });
+
+            // Обновляем кнопки внутри модального окна гипокситерапии
+            ['hypoxy_1', 'hypoxy_5', 'hypoxy_10'].forEach(id => {
+                const btn = document.getElementById(`btn_${id}`);
+                if(btn) {
+                    if(visitPlan.find(i => i.id === id)) {
+                        btn.innerHTML = `<span class="group-hover/btn:hidden"><i class="fa-solid fa-check mr-1"></i> В расчете</span><span class="hidden group-hover/btn:inline"><i class="fa-solid fa-xmark mr-1"></i> Убрать</span>`;
+                        btn.className = "group/btn w-full bg-slate-800 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm border border-transparent active:scale-95";
+                    } else {
+                        btn.innerHTML = `В расчет`;
+                        if(id === 'hypoxy_5') {
+                            btn.className = "group/btn w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-sm";
+                        } else {
+                            btn.className = "group/btn w-full bg-slate-100 hover:bg-blue-500 text-slate-700 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-all";
+                        }
                     }
                 }
             });
@@ -1340,6 +1459,28 @@
         function closeBranchModal() {
             const modal = document.getElementById('branchModal');
             const content = document.getElementById('branchModalContent');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        // Функции для Гипокситерапии
+        function openHypoxyModal() {
+            const modal = document.getElementById('hypoxyModal');
+            const content = document.getElementById('hypoxyModalContent');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+                updateButtonsState();
+            }, 10);
+        }
+
+        function closeHypoxyModal() {
+            const modal = document.getElementById('hypoxyModal');
+            const content = document.getElementById('hypoxyModalContent');
             modal.classList.add('opacity-0');
             content.classList.remove('scale-100');
             content.classList.add('scale-95');
