@@ -421,7 +421,7 @@
 
                 <!-- Заголовок текущей категории -->
                 <div class="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
-                    <h2 id="currentCategoryTitle" class="text-2xl font-bold text-neo-dark transition-opacity duration-300">Все услуги</h2>
+                    <h2 id="currentCategoryTitle" class="text-2xl font-bold text-neo-dark transition-opacity duration-300">Приемы врачей (Консультации)</h2>
                     <span id="servicesCount" class="text-xs text-neo-600 font-bold bg-neo-50 border border-neo-100 px-3 py-1.5 rounded-full shadow-sm">Найдено: 0</span>
                 </div>
 
@@ -1138,7 +1138,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderCategories();
-            renderServices(db);
+            setCategory('doctor');
         });
 
         // ==================== ЛОГИКА "ПЛАНА ВИЗИТА" ====================
